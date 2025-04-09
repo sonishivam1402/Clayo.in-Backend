@@ -1,5 +1,26 @@
 [
   {
+    "ContainingType": "e_commerce_backend.Controllers.CartController",
+    "Method": "GetAllCartItems",
+    "RelativePath": "api/Cart/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "e_commerce_backend.Controllers.ProductController",
     "Method": "GetAll",
     "RelativePath": "api/Product",
