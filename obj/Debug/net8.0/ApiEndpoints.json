@@ -1,20 +1,47 @@
 [
   {
     "ContainingType": "e_commerce_backend.Controllers.CartController",
-    "Method": "GetAllCartItems",
-    "RelativePath": "api/Cart/{userId}",
+    "Method": "AddToCart",
+    "RelativePath": "api/Cart/addOrUpdate",
     "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartItem",
+        "Type": "e_commerce_backend.DTO.Cart.AddToCart",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "e_commerce_backend.Controllers.CartController",
+    "Method": "DeleteCartItem",
+    "RelativePath": "api/Cart/delete",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cartId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "e_commerce_backend.Controllers.CartController",
+    "Method": "GetAllCartItems",
+    "RelativePath": "api/Cart/userId",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "userId",
         "Type": "System.Guid",
-        "IsRequired": true
-      },
-      {
-        "Name": "userId",
-        "Type": "",
         "IsRequired": true
       }
     ],
