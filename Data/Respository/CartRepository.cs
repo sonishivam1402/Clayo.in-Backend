@@ -15,23 +15,48 @@ namespace e_commerce_backend.Data.Respository
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<IEnumerable<GetCartItems>> GetAllCartItemsAsync(Guid userId)
+        public async Task<IEnumerable<object>> GetAllCartItemsAsync(Guid userId)
         {
             List<GetCartItems> cartItems = new List<GetCartItems>();
+
             using SqlConnection conn = new SqlConnection(connectionString);
             using SqlCommand cmd = new SqlCommand("GetCartProductByUserId", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
             cmd.Parameters.AddWithValue("@userId", userId);
+
             await conn.OpenAsync();
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
+
+            if (reader.HasRows)
             {
-                cartItems.Add(MapToCartItem(reader));
+                if (reader.FieldCount > 2)
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        cartItems.Add(MapToCartItem(reader));
+                    }
+                    return cartItems;
+                }
+                else
+                {
+                    StatusMessage status = null;
+                    while (await reader.ReadAsync())
+                    {
+                        status = new StatusMessage
+                        {
+                            Message = reader.GetString(reader.GetOrdinal("MESSAGE")),
+                            Status = reader.GetBoolean(reader.GetOrdinal("Status"))
+                        };
+                    }
+                    return new List<object> { status }; 
+                }
             }
-            return cartItems;
+
+            return cartItems; 
         }
+
 
         public async Task<StatusMessage> AddToCartAsync(AddToCart cartItem)
         {

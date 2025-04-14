@@ -5,7 +5,7 @@ namespace e_commerce_backend.Services.Interfaces
 {
     public interface ICartService
     {
-        Task<IEnumerable<GetCartItems>> GetAllCartItemsAsync(Guid userId);
+        Task<IEnumerable<object>> GetAllCartItemsAsync(Guid userId);
         Task<StatusMessage> AddToCartAsync(AddToCart cartItem);
         Task<StatusMessage> DeleteCartItemAsync(Guid cartId);
 

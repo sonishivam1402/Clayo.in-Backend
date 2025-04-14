@@ -5,33 +5,22 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Cart/userId": {
+    "/api/Cart/{userId}": {
       "get": {
         "tags": [
           "Cart"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "type": "string",
-                "format": "uuid"
-              }
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -70,33 +59,76 @@
         }
       }
     },
-    "/api/Cart/delete": {
+    "/api/Cart/delete/{cartId}": {
       "delete": {
         "tags": [
           "Cart"
+        ],
+        "parameters": [
+          {
+            "name": "cartId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Order/PlaceOrder": {
+      "post": {
+        "tags": [
+          "Order"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/PlaceOrder"
               }
             },
             "text/json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/PlaceOrder"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "string",
-                "format": "uuid"
+                "$ref": "#/components/schemas/PlaceOrder"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Order/GetOrderDetails/{userId}": {
+      "get": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -219,6 +251,16 @@
             "nullable": true
           },
           "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlaceOrder": {
+        "type": "object",
+        "properties": {
+          "cartIds": {
             "type": "string",
             "nullable": true
           }
