@@ -62,11 +62,12 @@ namespace e_commerce_backend.Data.Respository
         {
             StatusMessage statusMessage = new StatusMessage();
             using SqlConnection conn = new SqlConnection(connectionString);
-            using SqlCommand cmd = new SqlCommand("AddProductsToCart", conn)
+            using SqlCommand cmd = new SqlCommand("AddOrUpdateCart", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
             cmd.Parameters.AddWithValue("@userId", cartItem.UserId);
+            cmd.Parameters.AddWithValue("@cartId", cartItem.CartId);
             cmd.Parameters.AddWithValue("@productId", cartItem.ProductId);
             cmd.Parameters.AddWithValue("@quantity", cartItem.Quantity);
             await conn.OpenAsync();
@@ -81,7 +82,7 @@ namespace e_commerce_backend.Data.Respository
         }
 
 
-        public async Task<StatusMessage> DeleteCartItemAsync(Guid cartId)
+        public async Task<StatusMessage> DeleteCartItemAsync(Guid cartId, Guid productId)
         {
             StatusMessage statusMessage = new StatusMessage();
             using SqlConnection conn = new SqlConnection(connectionString);
@@ -90,6 +91,7 @@ namespace e_commerce_backend.Data.Respository
                 CommandType = CommandType.StoredProcedure
             };
             cmd.Parameters.AddWithValue("@cartId", cartId);
+            cmd.Parameters.AddWithValue("@productId", productId);
             await conn.OpenAsync();
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
             while (await reader.ReadAsync())
@@ -104,8 +106,8 @@ namespace e_commerce_backend.Data.Respository
         {
             return new GetCartItems
             {
-                cartId = reader.GetGuid(reader.GetOrdinal("Id")),
-                userId = reader.GetGuid(reader.GetOrdinal("UserId")),
+                cartId = reader.GetGuid(reader.GetOrdinal("CartId")),
+                //userId = reader.GetGuid(reader.GetOrdinal("UserId")),
                 productId = reader.GetGuid(reader.GetOrdinal("ProductId")),
                 quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
                 title = reader.GetString(reader.GetOrdinal("Title")),

@@ -4,7 +4,7 @@
     {
         public Guid cartId { get; set; }
         public Guid productId { get; set; }
-        public Guid userId { get; set; }
+        //public Guid userId { get; set; }
         public string title { get; set; }
         public string description { get; set; }
         public decimal price { get; set; }

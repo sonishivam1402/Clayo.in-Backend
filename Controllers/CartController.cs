@@ -43,10 +43,10 @@ namespace e_commerce_backend.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpDelete("delete/{cartId}")]
-        public async Task<IActionResult> DeleteCartItem( Guid cartId)
+        [HttpDelete("delete/{cartId}/{productId}")]
+        public async Task<IActionResult> DeleteCartItem( Guid cartId, Guid productId)
         {
-            var result = await _cartService.DeleteCartItemAsync(cartId);
+            var result = await _cartService.DeleteCartItemAsync(cartId, productId);
             if (result.Status)
             {
                 return Ok(result.Message);

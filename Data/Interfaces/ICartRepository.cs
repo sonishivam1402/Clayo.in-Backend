@@ -7,7 +7,7 @@ namespace e_commerce_backend.Data.Interfaces
     {
         Task<IEnumerable<object>> GetAllCartItemsAsync(Guid userId);
         Task<StatusMessage> AddToCartAsync(AddToCart cartItem);
-        Task<StatusMessage> DeleteCartItemAsync(Guid cartId);
+        Task<StatusMessage> DeleteCartItemAsync(Guid cartId,Guid productId);
 
         //Task<GetCartItems> GetCartItemByIdAsync(Guid cartId);
         //Task<bool> UpdateCartItemAsync(GetCartItems cartItem);

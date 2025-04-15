@@ -239,6 +239,11 @@
           "userId": {
             "type": "string",
             "format": "uuid"
+          },
+          "cartId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           }
         },
         "additionalProperties": false
