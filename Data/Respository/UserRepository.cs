@@ -54,21 +54,36 @@ namespace e_commerce_backend.Data.Respository
                 {
                     return new AuthResponse
                     {
-                        Success = false,
-                        Message = reader["MESSAGE"].ToString()
+                        StatusMessage = new StatusMessage
+                        {
+                            Status = false,
+                            Message = reader["MESSAGE"].ToString()
+                        }
                     };
                 }
                 else{
                     return new AuthResponse
                     {
-                        Success = true,
-                        User = MapToUser(reader)
+                        id = reader.GetGuid(reader.GetOrdinal("Id")),
+                        name = reader.GetString(reader.GetOrdinal("full_name")),
+                        roleId = reader.GetGuid(reader.GetOrdinal("Role_id")),
+                        profileImage = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
+                        cartId = reader.IsDBNull(reader.GetOrdinal("cartId")) ? null : reader.GetGuid(reader.GetOrdinal("cartId")),
+                        StatusMessage = new StatusMessage
+                        {
+                            Status = true,
+                            Message = "Login successful"
+                        }
                     };
                 }
             }
             return new AuthResponse 
-            {   Success = false,
-                Message = "Unexpected error occurred." 
+            {   
+                StatusMessage = new StatusMessage
+                {
+                    Status = false,
+                    Message = "Invalid email or password"
+                }
             };
 
         }

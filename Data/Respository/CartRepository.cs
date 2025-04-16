@@ -15,7 +15,7 @@ namespace e_commerce_backend.Data.Respository
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<IEnumerable<object>> GetAllCartItemsAsync(Guid userId)
+        public async Task<IEnumerable<object>> GetAllCartItemsAsync(Guid cartId)
         {
             List<GetCartItems> cartItems = new List<GetCartItems>();
 
@@ -24,7 +24,7 @@ namespace e_commerce_backend.Data.Respository
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Parameters.AddWithValue("@userId", userId);
+            cmd.Parameters.AddWithValue("@cartId", cartId);
 
             await conn.OpenAsync();
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
@@ -106,7 +106,7 @@ namespace e_commerce_backend.Data.Respository
         {
             return new GetCartItems
             {
-                cartId = reader.GetGuid(reader.GetOrdinal("CartId")),
+                cartItemId = reader.GetGuid(reader.GetOrdinal("CartItemId")),
                 //userId = reader.GetGuid(reader.GetOrdinal("UserId")),
                 productId = reader.GetGuid(reader.GetOrdinal("ProductId")),
                 quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),

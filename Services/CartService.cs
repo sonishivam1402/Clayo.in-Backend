@@ -13,9 +13,9 @@ namespace e_commerce_backend.Services
             _cartRepository = cartRepository;
         }
 
-        public async Task<IEnumerable<object>> GetAllCartItemsAsync(Guid userId)
+        public async Task<IEnumerable<object>> GetAllCartItemsAsync(Guid cartId)
         {
-            return await _cartRepository.GetAllCartItemsAsync(userId);
+            return await _cartRepository.GetAllCartItemsAsync(cartId);
         }
 
         public async Task<StatusMessage> AddToCartAsync(AddToCart cartItem)

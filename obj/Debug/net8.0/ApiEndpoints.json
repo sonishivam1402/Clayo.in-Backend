@@ -2,13 +2,13 @@
   {
     "ContainingType": "e_commerce_backend.Controllers.CartController",
     "Method": "GetAllCartItems",
-    "RelativePath": "api/Cart/{userId}",
+    "RelativePath": "api/Cart/{cartId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userId",
+        "Name": "cartId",
         "Type": "System.Guid",
         "IsRequired": true
       }
@@ -34,13 +34,18 @@
   {
     "ContainingType": "e_commerce_backend.Controllers.CartController",
     "Method": "DeleteCartItem",
-    "RelativePath": "api/Cart/delete/{cartId}",
+    "RelativePath": "api/Cart/delete/{cartId}/{productId}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "cartId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "productId",
         "Type": "System.Guid",
         "IsRequired": true
       }

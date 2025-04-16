@@ -21,7 +21,9 @@ namespace e_commerce_backend.Data.Respository
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
-            command.Parameters.AddWithValue("@cartIds", order.CartIds);
+            command.Parameters.AddWithValue("@userId", order.userId);
+            command.Parameters.AddWithValue("@cartId", order.cartId);
+            command.Parameters.AddWithValue("@cartItemIds", order.CartItemIds);
             await connection.OpenAsync();
             SqlDataReader reader = await command.ExecuteReaderAsync();
             StatusMessage statusMessage = new StatusMessage();
@@ -38,7 +40,10 @@ namespace e_commerce_backend.Data.Respository
 
         public async Task<IEnumerable<object>> GetOrderDetails(Guid userId)
         {
-            List<GetOrderDetails> orderDetails = new List<GetOrderDetails>();
+            List<GetOrderDetails>orderDetails = new List<GetOrderDetails>();
+            List<OrderItems> orderItems = new List<OrderItems>();
+            List<ShippingOrder> shippingOrders = new List<ShippingOrder>();
+
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand("GetOrderDetails", connection)
             {
@@ -57,18 +62,59 @@ namespace e_commerce_backend.Data.Respository
                     {
                         orderDetails.Add(new GetOrderDetails
                         {
-                            OrderId = reader.GetGuid(reader.GetOrdinal("id")),
-                            Product_title = reader.GetString(reader.GetOrdinal("title")),
-                            Product_image = reader.GetString(reader.GetOrdinal("image")),
-                            Product_price = reader.GetDecimal(reader.GetOrdinal("price")),
-                            Product_quantity = reader.GetInt32(reader.GetOrdinal("quantity")),
-                            Product_total_price = reader.GetDecimal(reader.GetOrdinal("total_price")),
-                            Order_delivery_date = reader.GetDateTime(reader.GetOrdinal("delivered_at")),
-                            Order_date = reader.GetDateTime(reader.GetOrdinal("placed_at")),
-                            Order_status = reader.GetString(reader.GetOrdinal("Status"))
+                            OrderId = reader.GetGuid(reader.GetOrdinal("OrderId")),
+                            TotalAmount = reader.GetDecimal(reader.GetOrdinal("TotalAmount")),
+                            PlacedAt = reader.GetDateTime(reader.GetOrdinal("PlacedAt")),
+                            Status = reader.GetString(reader.GetOrdinal("Status"))
                         });
                     }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            orderItems.Add(new OrderItems
+                            {
+                                OrderItemId = reader.GetGuid(reader.GetOrdinal("OrderItemId")),
+                                OrderId = reader.GetGuid(reader.GetOrdinal("OrderId")),
+                                ProductId = reader.GetGuid(reader.GetOrdinal("ProductId")),
+                                Title = reader.GetString(reader.GetOrdinal("title")),
+                                Quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
+                                TotalPrice = reader.GetDecimal(reader.GetOrdinal("ProductPrice")),
+                                Price = reader.GetDecimal(reader.GetOrdinal("Price")),
+                                image = reader.GetString(reader.GetOrdinal("image"))
+                            });
+
+                        }
+                    }
+
+                    if (await reader.NextResultAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            shippingOrders.Add(new ShippingOrder
+                            {
+                                ShippingOrderItemId = reader.GetGuid(reader.GetOrdinal("Id")),
+                                OrderId= reader.GetGuid(reader.GetOrdinal("OrderId")),
+                                OrderItemId = reader.GetGuid(reader.GetOrdinal("OrderItemId")),
+                                Carrier = reader.GetString(reader.GetOrdinal("Carrier")),
+                                TrackingNumber = reader.GetString(reader.GetOrdinal("Tracking_Number")),
+                                ShippingAt = reader.GetDateTime(reader.GetOrdinal("Shipped_At")),
+                                DeliveredAt = reader.GetDateTime(reader.GetOrdinal("Delivered_At")),
+                                EstimatedDeliveryDate = reader.GetDateTime(reader.GetOrdinal("Estimated_Delivery")),
+                                Status = reader.GetString(reader.GetOrdinal("Shipping_Status"))
+                            });
+                        }
+                    }
+
+                    foreach(var orderDetail in orderDetails)
+                    {
+                        orderDetail.OrderItems = orderItems.Where(o=>o.OrderId == orderDetail.OrderId).ToList();
+                        orderDetail.ShippingOrders = shippingOrders.Where(o=>o.OrderId == orderDetail.OrderId).ToList();
+                    }
+
                     return orderDetails;
+
                 }
                 else
                 {

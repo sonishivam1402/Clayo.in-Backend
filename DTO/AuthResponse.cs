@@ -4,8 +4,12 @@ namespace e_commerce_backend.DTO
 {
     public class AuthResponse
     {
-        public bool Success { get; set; }
-        public string? Message { get; set; }
-        public User? User { get; set; }
+        public StatusMessage? StatusMessage { get; set; } 
+        public Guid id { get; set; }
+        public string name { get; set; }
+        public Guid roleId { get; set; }
+        public string? profileImage { get; set; }
+
+        public Guid? cartId { get; set; }
     }
 }

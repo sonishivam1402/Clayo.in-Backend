@@ -26,13 +26,13 @@ namespace e_commerce_backend.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             var result = await _userService.AuthUser(request.Email, request.Password);
-            if (result.Success)
+            if (result.StatusMessage.Status)
             {
                 return Ok(result);
             }
             else
             {
-                return Unauthorized(new {result.Message});
+                return Unauthorized(result.StatusMessage);
             }
         }
 

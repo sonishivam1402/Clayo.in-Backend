@@ -2,6 +2,8 @@
 {
     public class PlaceOrder
     {
-        public string CartIds { get; set; }
+        public Guid userId { get; set; }
+        public Guid cartId { get; set; }
+        public string CartItemIds { get; set; }
     }
 }

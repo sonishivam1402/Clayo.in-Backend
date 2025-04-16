@@ -2,15 +2,14 @@
 {
     public class GetOrderDetails
     {
-        public Guid OrderId { get; set; }
-        public string Product_title { get; set; }
-        public string Product_image { get; set; }
-        public decimal Product_price { get; set; }
-        public int Product_quantity { get; set; }
-        public decimal Product_total_price { get; set; }
-        public string Order_status { get; set; }
-        public DateTime Order_date { get; set; }
-        public DateTime Order_delivery_date { get; set; }
+        public Guid OrderId { get; set; }  
+        public string Status { get; set; }
 
+        public DateTime PlacedAt { get; set; }
+        
+        public decimal TotalAmount { get; set; }
+
+        public List<OrderItems> OrderItems { get; set; } = new List<OrderItems>();
+        public List<ShippingOrder> ShippingOrders { get; set; } = new List<ShippingOrder>();
     }
 }

@@ -17,10 +17,10 @@ namespace e_commerce_backend.Controllers
         }
 
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetAllCartItems(Guid userId)
+        [HttpGet("{cartId}")]
+        public async Task<IActionResult> GetAllCartItems(Guid cartId)
         {
-            var cartItems = await _cartService.GetAllCartItemsAsync(userId);
+            var cartItems = await _cartService.GetAllCartItemsAsync(cartId);
             if (cartItems.GetType() == typeof(List<GetCartItems>))
             {
                 return Ok(cartItems);

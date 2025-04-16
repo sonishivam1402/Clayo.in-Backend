@@ -5,14 +5,14 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Cart/{userId}": {
+    "/api/Cart/{cartId}": {
       "get": {
         "tags": [
           "Cart"
         ],
         "parameters": [
           {
-            "name": "userId",
+            "name": "cartId",
             "in": "path",
             "required": true,
             "schema": {
@@ -59,7 +59,7 @@
         }
       }
     },
-    "/api/Cart/delete/{cartId}": {
+    "/api/Cart/delete/{cartId}/{productId}": {
       "delete": {
         "tags": [
           "Cart"
@@ -67,6 +67,15 @@
         "parameters": [
           {
             "name": "cartId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "productId",
             "in": "path",
             "required": true,
             "schema": {
@@ -265,7 +274,15 @@
       "PlaceOrder": {
         "type": "object",
         "properties": {
-          "cartIds": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cartId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cartItemIds": {
             "type": "string",
             "nullable": true
           }
