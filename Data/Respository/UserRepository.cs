@@ -35,6 +35,37 @@ namespace e_commerce_backend.Data.Respository
             return users;
         }
 
+        public async Task<User> GetUserById(Guid Id)
+        {
+            User user = new User();
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("GetUserByUserId", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("id", Id);
+
+            await conn.OpenAsync();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                user = new User
+                {
+                    Id = reader.GetGuid(reader.GetOrdinal("Id")),
+                    Name = reader.GetString(reader.GetOrdinal("full_name")),
+                    Email = reader.GetString(reader.GetOrdinal("Email")),
+                    Mobile_no = reader.GetString(reader.GetOrdinal("phone_number")),
+                    Role = reader.GetString(reader.GetOrdinal("Role_name")),
+                    address = reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader.GetString(reader.GetOrdinal("address")),
+                    profile_picture = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
+                    last_updated = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? null : reader.GetDateTime(reader.GetOrdinal("updated_at"))
+                };
+            }
+
+            return user;
+        }
+
         public async Task<AuthResponse> AuthenticateUser(string email, string password)
         {
             using SqlConnection conn = new(_connectionString);

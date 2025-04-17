@@ -95,7 +95,7 @@ namespace e_commerce_backend.Data.Respository
                             shippingOrders.Add(new ShippingOrder
                             {
                                 ShippingOrderItemId = reader.GetGuid(reader.GetOrdinal("Id")),
-                                OrderId= reader.GetGuid(reader.GetOrdinal("OrderId")),
+                                OrderId = reader.GetGuid(reader.GetOrdinal("OrderId")),
                                 OrderItemId = reader.GetGuid(reader.GetOrdinal("OrderItemId")),
                                 Carrier = reader.GetString(reader.GetOrdinal("Carrier")),
                                 TrackingNumber = reader.GetString(reader.GetOrdinal("Tracking_Number")),
@@ -107,10 +107,10 @@ namespace e_commerce_backend.Data.Respository
                         }
                     }
 
-                    foreach(var orderDetail in orderDetails)
+                    foreach (var orderDetail in orderDetails)
                     {
-                        orderDetail.OrderItems = orderItems.Where(o=>o.OrderId == orderDetail.OrderId).ToList();
-                        orderDetail.ShippingOrders = shippingOrders.Where(o=>o.OrderId == orderDetail.OrderId).ToList();
+                        orderDetail.OrderItems = orderItems.Where(o => o.OrderId == orderDetail.OrderId).ToList();
+                        orderDetail.ShippingOrders = shippingOrders.Where(o => o.OrderId == orderDetail.OrderId).ToList();
                     }
 
                     return orderDetails;
@@ -124,7 +124,7 @@ namespace e_commerce_backend.Data.Respository
                         status.Message = reader.GetString(reader.GetOrdinal("MESSAGE"));
                         status.Status = reader.GetBoolean(reader.GetOrdinal("Status"));
                     }
-                    return new List<object> { status };
+                    return new List<StatusMessage> { status };
                 }
             }
             else
@@ -134,7 +134,7 @@ namespace e_commerce_backend.Data.Respository
                     Message = "No order found",
                     Status = false
                 };
-                return new List<object> { status };
+                return new List<StatusMessage> { status };
             }
         }
 

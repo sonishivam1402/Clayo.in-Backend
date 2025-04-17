@@ -19,6 +19,11 @@ namespace e_commerce_backend.Services
             return await _userRepository.GetAllUsers();
         }
 
+        public async Task<User> GetUserById(Guid Id)
+        {
+            return await _userRepository.GetUserById(Id);
+        }
+
         public async Task<AuthResponse> AuthUser(string email, string password)
         {
             return  await _userRepository.AuthenticateUser(email,password);

@@ -46,7 +46,7 @@ namespace e_commerce_backend.Data.Respository
                 description = reader.GetString(reader.GetOrdinal("description")),
                 category = reader.GetString(reader.GetOrdinal("category")),
                 price = reader.GetDecimal(reader.GetOrdinal("price")),
-                stock = reader.GetOrdinal("stock"),
+                stock = reader.GetInt32(reader.GetOrdinal("stock")),
                 image = reader.IsDBNull(reader.GetOrdinal("image")) ? null : reader.GetString(reader.GetOrdinal("image")),
                 rating_rate = reader.GetDecimal(reader.GetOrdinal("rating_rate")),
                 rating_count = reader.GetOrdinal("rating_count"),

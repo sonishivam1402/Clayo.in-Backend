@@ -6,6 +6,9 @@ namespace e_commerce_backend.Data.Interfaces
     public interface IUserRepository
     {
         Task<IEnumerable<User>> GetAllUsers();
+
+        Task<User> GetUserById(Guid id);
+
         Task<AuthResponse> AuthenticateUser(string email, string password);
 
         Task<string> RegisterUser(RegisterUser request);

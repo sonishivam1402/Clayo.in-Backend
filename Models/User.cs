@@ -14,6 +14,7 @@
 
         public string? profile_picture { get; set; }
 
+        public string? address {  get; set; }
         public DateTime? last_updated { get; set; } = default(DateTime?);
 
     }

@@ -22,6 +22,18 @@ namespace e_commerce_backend.Controllers
             return Ok(users);
         }
 
+        [HttpPost("Id/{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var user = await _userService.GetUserById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {

@@ -33,7 +33,7 @@ namespace e_commerce_backend.Controllers
         public async Task<IActionResult> GetOrderDetails(Guid userId)
         {
             var result = await _orderService.GetOrderDetails(userId);
-            if(result.GetType() == typeof(StatusMessage))
+            if(result.GetType() == typeof(List<StatusMessage>))
             {
                 return NotFound(result);
             }
