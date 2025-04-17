@@ -107,7 +107,7 @@
   {
     "ContainingType": "e_commerce_backend.Controllers.UserController",
     "Method": "GetById",
-    "RelativePath": "api/User/Id",
+    "RelativePath": "api/User/Id/{id}",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,

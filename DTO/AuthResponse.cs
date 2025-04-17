@@ -11,5 +11,6 @@ namespace e_commerce_backend.DTO
         public string? profileImage { get; set; }
 
         public Guid? cartId { get; set; }
+        public string Token { get; internal set; }
     }
 }
