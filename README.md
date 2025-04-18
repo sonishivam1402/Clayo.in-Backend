@@ -18,7 +18,7 @@ Check out the React-based frontend for Clayo: [Clayo Frontend](https://github.co
 ## 🛠️ Technologies Used
 
 - ASP.NET Core Web API
-- Entity Framework Core
+- ADO.NET for database access
 - MS SQL Server
 - JWT Authentication
 - Swagger for API documentation
