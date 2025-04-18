@@ -1,6 +1,7 @@
 ﻿using e_commerce_backend.DTO;
 using e_commerce_backend.DTO.Order;
 using e_commerce_backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,8 @@ namespace e_commerce_backend.Controllers
         {
             _orderService = orderService;
         }
+
+        [Authorize]
         [HttpPost("PlaceOrder")]
         public async Task<IActionResult> PlaceOrder([FromBody] PlaceOrder order)
         {
@@ -29,6 +32,7 @@ namespace e_commerce_backend.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("GetOrderDetails/{userId}")]
         public async Task<IActionResult> GetOrderDetails(Guid userId)
         {

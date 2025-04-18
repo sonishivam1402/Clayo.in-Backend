@@ -1,6 +1,7 @@
 ﻿using e_commerce_backend.DTO;
 using e_commerce_backend.DTO.Cart;
 using e_commerce_backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +17,11 @@ namespace e_commerce_backend.Controllers
             _cartService = cartService;
         }
 
-
-        [HttpGet("{cartId}")]
-        public async Task<IActionResult> GetAllCartItems(Guid cartId)
+        [Authorize]
+        [HttpGet("{userId}/{cartId}")]
+        public async Task<IActionResult> GetAllCartItems(Guid cartId, Guid userId)
         {
-            var cartItems = await _cartService.GetAllCartItemsAsync(cartId);
+            var cartItems = await _cartService.GetAllCartItemsAsync(cartId, userId);
             if (cartItems.GetType() == typeof(List<GetCartItems>))
             {
                 return Ok(cartItems);
@@ -32,6 +33,7 @@ namespace e_commerce_backend.Controllers
             
         }
 
+        [Authorize]
         [HttpPost("addOrUpdate")]
         public async Task<IActionResult> AddToCart([FromBody] AddToCart cartItem)
         {
@@ -43,6 +45,7 @@ namespace e_commerce_backend.Controllers
             return BadRequest(result.Message);
         }
 
+        [Authorize]
         [HttpDelete("delete/{cartId}/{productId}")]
         public async Task<IActionResult> DeleteCartItem( Guid cartId, Guid productId)
         {

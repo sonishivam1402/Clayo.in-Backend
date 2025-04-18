@@ -15,16 +15,17 @@ namespace e_commerce_backend.Data.Respository
             connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<IEnumerable<object>> GetAllCartItemsAsync(Guid cartId)
+        public async Task<IEnumerable<object>> GetAllCartItemsAsync(Guid cartId, Guid userId)
         {
             List<GetCartItems> cartItems = new List<GetCartItems>();
 
             using SqlConnection conn = new SqlConnection(connectionString);
-            using SqlCommand cmd = new SqlCommand("GetCartProductByUserId", conn)
+            using SqlCommand cmd = new SqlCommand("GetCartDetails", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
             cmd.Parameters.AddWithValue("@cartId", cartId);
+            cmd.Parameters.AddWithValue("@userId", userId);
 
             await conn.OpenAsync();
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();

@@ -2,13 +2,18 @@
   {
     "ContainingType": "e_commerce_backend.Controllers.CartController",
     "Method": "GetAllCartItems",
-    "RelativePath": "api/Cart/{cartId}",
+    "RelativePath": "api/Cart/{userId}/{cartId}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "cartId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
         "Type": "System.Guid",
         "IsRequired": true
       }

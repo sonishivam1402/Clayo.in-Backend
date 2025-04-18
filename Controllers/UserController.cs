@@ -1,6 +1,7 @@
 ﻿using e_commerce_backend.DTO;
 using e_commerce_backend.Models;
 using e_commerce_backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,6 +23,7 @@ namespace e_commerce_backend.Controllers
             _userService = userService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -29,6 +31,7 @@ namespace e_commerce_backend.Controllers
             return Ok(users);
         }
 
+        [Authorize]
         [HttpPost("Id/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
