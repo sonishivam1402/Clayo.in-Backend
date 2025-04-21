@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -63,10 +65,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         builder => builder
-            .WithOrigins("http://localhost:5173") // React dev server
+            .WithOrigins("http://localhost:3000") // React dev server //docker -3000
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
+
+
+
 
 var app = builder.Build();
 
@@ -77,13 +82,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
 // Use CORS
 app.UseCors("AllowReactApp");
 
+app.UseRouting();
+
+
+
+
+
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
