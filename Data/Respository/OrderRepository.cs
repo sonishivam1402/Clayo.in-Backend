@@ -38,7 +38,7 @@ namespace e_commerce_backend.Data.Respository
             return statusMessage;
         }
 
-        public async Task<IEnumerable<object>> GetOrderDetails(Guid userId)
+        public async Task<IEnumerable<object>> GetOrderDetails(Guid? userId)
         {
             List<GetOrderDetails>orderDetails = new List<GetOrderDetails>();
             List<OrderItems> orderItems = new List<OrderItems>();
@@ -63,6 +63,7 @@ namespace e_commerce_backend.Data.Respository
                         orderDetails.Add(new GetOrderDetails
                         {
                             OrderId = reader.GetGuid(reader.GetOrdinal("OrderId")),
+                            customer = reader.GetString(reader.GetOrdinal("full_name")),
                             TotalAmount = reader.GetDecimal(reader.GetOrdinal("TotalAmount")),
                             PlacedAt = reader.GetDateTime(reader.GetOrdinal("PlacedAt")),
                             Status = reader.GetString(reader.GetOrdinal("Status"))
@@ -138,5 +139,27 @@ namespace e_commerce_backend.Data.Respository
             }
         }
 
+
+        public async Task<StatusMessage> CancelOrder(Guid orderId)
+        {
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand command = new SqlCommand("CancelOrderByOrderId", connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
+            command.Parameters.AddWithValue("@orderId", orderId);
+            await connection.OpenAsync();
+            using SqlDataReader reader = await command.ExecuteReaderAsync();
+            StatusMessage statusMessage = new StatusMessage();
+            if (reader.HasRows)
+            {
+                while (await reader.ReadAsync())
+                {
+                    statusMessage.Message = reader.GetString(reader.GetOrdinal("MESSAGE"));
+                    statusMessage.Status = reader.GetBoolean(reader.GetOrdinal("Status"));
+                }
+            }
+            return statusMessage;
+        }
     }
 }

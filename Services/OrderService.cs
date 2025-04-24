@@ -16,9 +16,14 @@ namespace e_commerce_backend.Services
         {
             return await _orderRepository.PlaceOrder(order);
         }
-        public async Task<IEnumerable<object>> GetOrderDetails(Guid userId)
+        public async Task<IEnumerable<object>> GetOrderDetails(Guid? userId)
         {
             return await _orderRepository.GetOrderDetails(userId);
+        }
+
+        public async Task<StatusMessage> CancelOrder(Guid orderId)
+        {
+            return await _orderRepository.CancelOrder(orderId);
         }
     }    
     

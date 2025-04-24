@@ -1,5 +1,26 @@
 [
   {
+    "ContainingType": "e_commerce_backend.Controllers.AdminController",
+    "Method": "GetDashboardData",
+    "RelativePath": "api/Admin/dashboard/{userId}/{roleId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "roleId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "e_commerce_backend.Controllers.CartController",
     "Method": "GetAllCartItems",
     "RelativePath": "api/Cart/{userId}/{cartId}",
@@ -59,16 +80,32 @@
   },
   {
     "ContainingType": "e_commerce_backend.Controllers.OrderController",
+    "Method": "CancelOrder",
+    "RelativePath": "api/Order/CancelOrder",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderId",
+        "Type": "System.Guid",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "e_commerce_backend.Controllers.OrderController",
     "Method": "GetOrderDetails",
-    "RelativePath": "api/Order/GetOrderDetails/{userId}",
+    "RelativePath": "api/Order/GetOrderDetails",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
         "Name": "userId",
-        "Type": "System.Guid",
-        "IsRequired": true
+        "Type": "System.Nullable\u00601[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
