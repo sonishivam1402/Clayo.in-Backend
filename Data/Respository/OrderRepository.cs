@@ -38,7 +38,7 @@ namespace e_commerce_backend.Data.Respository
             return statusMessage;
         }
 
-        public async Task<IEnumerable<object>> GetOrderDetails(Guid userId)
+        public async Task<IEnumerable<object>> GetOrderDetails(Guid? userId)
         {
             List<GetOrderDetails>orderDetails = new List<GetOrderDetails>();
             List<OrderItems> orderItems = new List<OrderItems>();
@@ -63,6 +63,7 @@ namespace e_commerce_backend.Data.Respository
                         orderDetails.Add(new GetOrderDetails
                         {
                             OrderId = reader.GetGuid(reader.GetOrdinal("OrderId")),
+                            customer = reader.GetString(reader.GetOrdinal("full_name")),
                             TotalAmount = reader.GetDecimal(reader.GetOrdinal("TotalAmount")),
                             PlacedAt = reader.GetDateTime(reader.GetOrdinal("PlacedAt")),
                             Status = reader.GetString(reader.GetOrdinal("Status"))
@@ -79,6 +80,7 @@ namespace e_commerce_backend.Data.Respository
                                 OrderId = reader.GetGuid(reader.GetOrdinal("OrderId")),
                                 ProductId = reader.GetGuid(reader.GetOrdinal("ProductId")),
                                 Title = reader.GetString(reader.GetOrdinal("title")),
+                                Status = reader.GetString(reader.GetOrdinal("status")),
                                 Quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
                                 TotalPrice = reader.GetDecimal(reader.GetOrdinal("ProductPrice")),
                                 Price = reader.GetDecimal(reader.GetOrdinal("Price")),
@@ -110,7 +112,10 @@ namespace e_commerce_backend.Data.Respository
                     foreach (var orderDetail in orderDetails)
                     {
                         orderDetail.OrderItems = orderItems.Where(o => o.OrderId == orderDetail.OrderId).ToList();
-                        orderDetail.ShippingOrders = shippingOrders.Where(o => o.OrderId == orderDetail.OrderId).ToList();
+                        foreach (var orderItem in orderDetail.OrderItems)
+                        {
+                            orderItem.ShippingOrders = shippingOrders.Where(o => o.OrderItemId == orderItem.OrderItemId).ToList();
+                        }
                     }
 
                     return orderDetails;
@@ -138,5 +143,27 @@ namespace e_commerce_backend.Data.Respository
             }
         }
 
+
+        public async Task<StatusMessage> CancelOrder(Guid orderId)
+        {
+            using SqlConnection connection = new SqlConnection(_connectionString);
+            using SqlCommand command = new SqlCommand("CancelOrderByOrderId", connection)
+            {
+                CommandType = System.Data.CommandType.StoredProcedure
+            };
+            command.Parameters.AddWithValue("@orderItemId", orderId);
+            await connection.OpenAsync();
+            using SqlDataReader reader = await command.ExecuteReaderAsync();
+            StatusMessage statusMessage = new StatusMessage();
+            if (reader.HasRows)
+            {
+                while (await reader.ReadAsync())
+                {
+                    statusMessage.Message = reader.GetString(reader.GetOrdinal("MESSAGE"));
+                    statusMessage.Status = reader.GetBoolean(reader.GetOrdinal("Status"));
+                }
+            }
+            return statusMessage;
+        }
     }
 }

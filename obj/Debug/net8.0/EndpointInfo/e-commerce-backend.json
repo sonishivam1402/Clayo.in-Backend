@@ -5,6 +5,38 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/Admin/dashboard/{userId}/{roleId}": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "roleId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Cart/{userId}/{cartId}": {
       "get": {
         "tags": [
@@ -131,7 +163,7 @@
         }
       }
     },
-    "/api/Order/GetOrderDetails/{userId}": {
+    "/api/Order/GetOrderDetails": {
       "get": {
         "tags": [
           "Order"
@@ -139,8 +171,29 @@
         "parameters": [
           {
             "name": "userId",
-            "in": "path",
-            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Order/CancelOrder": {
+      "delete": {
+        "tags": [
+          "Order"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
             "schema": {
               "type": "string",
               "format": "uuid"

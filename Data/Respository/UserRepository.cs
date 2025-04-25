@@ -156,6 +156,9 @@ namespace e_commerce_backend.Data.Respository
                 Email = reader.GetString(reader.GetOrdinal("Email")),
                 Mobile_no = reader.GetString(reader.GetOrdinal("phone_number")),
                 Role = reader.GetString(reader.GetOrdinal("Role_name")),
+                address = reader.GetString(reader.GetOrdinal("address")),
+                hasAccess = reader.GetBoolean(reader.GetOrdinal("hasAccess")),
+                isVerified = reader.GetBoolean(reader.GetOrdinal("is_verified")),
                 profile_picture = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
                 last_updated = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? null : reader.GetDateTime(reader.GetOrdinal("updated_at"))
             };

@@ -6,6 +6,8 @@ namespace e_commerce_backend.Services.Interfaces
     public interface IOrderService
     {
         Task<StatusMessage> PlaceOrder(PlaceOrder order);
-        Task<IEnumerable<object>> GetOrderDetails(Guid userId);
+        Task<IEnumerable<object>> GetOrderDetails(Guid? userId);
+
+        Task<StatusMessage> CancelOrder(Guid orderId);
     }
 }

@@ -32,9 +32,9 @@ namespace e_commerce_backend.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet("GetOrderDetails/{userId}")]
-        public async Task<IActionResult> GetOrderDetails(Guid userId)
+        //[Authorize]
+        [HttpGet("GetOrderDetails")]
+        public async Task<IActionResult> GetOrderDetails([FromQuery]Guid? userId)
         {
             var result = await _orderService.GetOrderDetails(userId);
             if(result.GetType() == typeof(List<StatusMessage>))
@@ -44,6 +44,21 @@ namespace e_commerce_backend.Controllers
             else
             {
                 return Ok(result);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("CancelOrder")]
+        public async Task<IActionResult> CancelOrder([FromQuery] Guid orderId)
+        {
+            var result = await _orderService.CancelOrder(orderId);
+            if (result.Status)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
             }
         }
     }
