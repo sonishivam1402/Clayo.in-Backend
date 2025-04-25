@@ -11,6 +11,6 @@
         public decimal TotalAmount { get; set; }
 
         public List<OrderItems> OrderItems { get; set; } = new List<OrderItems>();
-        public List<ShippingOrder> ShippingOrders { get; set; } = new List<ShippingOrder>();
+        
     }
 }

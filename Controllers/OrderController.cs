@@ -32,7 +32,7 @@ namespace e_commerce_backend.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("GetOrderDetails")]
         public async Task<IActionResult> GetOrderDetails([FromQuery]Guid? userId)
         {

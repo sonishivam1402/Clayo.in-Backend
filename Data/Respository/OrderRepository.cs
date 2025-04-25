@@ -80,6 +80,7 @@ namespace e_commerce_backend.Data.Respository
                                 OrderId = reader.GetGuid(reader.GetOrdinal("OrderId")),
                                 ProductId = reader.GetGuid(reader.GetOrdinal("ProductId")),
                                 Title = reader.GetString(reader.GetOrdinal("title")),
+                                Status = reader.GetString(reader.GetOrdinal("status")),
                                 Quantity = reader.GetInt32(reader.GetOrdinal("Quantity")),
                                 TotalPrice = reader.GetDecimal(reader.GetOrdinal("ProductPrice")),
                                 Price = reader.GetDecimal(reader.GetOrdinal("Price")),
@@ -111,7 +112,10 @@ namespace e_commerce_backend.Data.Respository
                     foreach (var orderDetail in orderDetails)
                     {
                         orderDetail.OrderItems = orderItems.Where(o => o.OrderId == orderDetail.OrderId).ToList();
-                        orderDetail.ShippingOrders = shippingOrders.Where(o => o.OrderId == orderDetail.OrderId).ToList();
+                        foreach (var orderItem in orderDetail.OrderItems)
+                        {
+                            orderItem.ShippingOrders = shippingOrders.Where(o => o.OrderItemId == orderItem.OrderItemId).ToList();
+                        }
                     }
 
                     return orderDetails;
@@ -147,7 +151,7 @@ namespace e_commerce_backend.Data.Respository
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
-            command.Parameters.AddWithValue("@orderId", orderId);
+            command.Parameters.AddWithValue("@orderItemId", orderId);
             await connection.OpenAsync();
             using SqlDataReader reader = await command.ExecuteReaderAsync();
             StatusMessage statusMessage = new StatusMessage();
