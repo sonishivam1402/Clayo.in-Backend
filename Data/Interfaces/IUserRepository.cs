@@ -11,7 +11,7 @@ namespace e_commerce_backend.Data.Interfaces
 
         Task<AuthResponse> AuthenticateUser(string email, string password);
 
-        Task<string> RegisterUser(RegisterUser request);
+        Task<string> AddOrUpdateUsers(AddOrUpdateUsers request);
 
         //Task UpdateAsync(User user);
         //Task DeleteAsync(Guid id);

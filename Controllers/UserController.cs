@@ -89,9 +89,9 @@ namespace e_commerce_backend.Controllers
 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUser request)
+        public async Task<IActionResult> Register([FromBody] AddOrUpdateUsers request)
         {
-            var result = await _userService.RegisterUser(request);
+            var result = await _userService.AddOrUpdateUsers(request);
             return Ok(new { Message = result });
         }
     }

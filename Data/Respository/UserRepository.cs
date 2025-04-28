@@ -119,14 +119,14 @@ namespace e_commerce_backend.Data.Respository
 
         }
 
-        public async Task<string> RegisterUser(RegisterUser request)
+        public async Task<string> AddOrUpdateUsers(AddOrUpdateUsers request)
         {
             using SqlConnection conn = new(_connectionString);
-            using SqlCommand cmd = new("UserRegistration", conn)
+            using SqlCommand cmd = new("AddOrUpdateUser", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
-
+            cmd.Parameters.AddWithValue("@id", request.Id);
             cmd.Parameters.AddWithValue("@name", request.Name);
             cmd.Parameters.AddWithValue("@email", request.Email);
             cmd.Parameters.AddWithValue("@phone_number", request.PhoneNumber);

@@ -21,6 +21,53 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "e_commerce_backend.Controllers.AdminController",
+    "Method": "GetAllOrderStatus",
+    "RelativePath": "api/Admin/getAllOrderStatus",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "e_commerce_backend.Controllers.AdminController",
+    "Method": "UpdateOrderStatus",
+    "RelativePath": "api/Admin/updateOrderStatus/{orderItemId}/{status}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "orderItemId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "status",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "e_commerce_backend.Controllers.AdminController",
+    "Method": "UpdateUserAccess",
+    "RelativePath": "api/Admin/updateUserAccess/{userId}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "e_commerce_backend.Controllers.CartController",
     "Method": "GetAllCartItems",
     "RelativePath": "api/Cart/{userId}/{cartId}",
@@ -188,7 +235,7 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "e_commerce_backend.DTO.RegisterUser",
+        "Type": "e_commerce_backend.DTO.AddOrUpdateUsers",
         "IsRequired": true
       }
     ],

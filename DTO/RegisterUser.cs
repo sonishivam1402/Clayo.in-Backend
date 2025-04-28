@@ -1,7 +1,8 @@
 ﻿namespace e_commerce_backend.DTO
 {
-    public class RegisterUser
+    public class AddOrUpdateUsers
     {
+        public Guid? Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }

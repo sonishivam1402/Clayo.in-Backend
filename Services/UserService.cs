@@ -29,9 +29,9 @@ namespace e_commerce_backend.Services
             return  await _userRepository.AuthenticateUser(email,password);
         }
 
-        public async Task<string> RegisterUser(RegisterUser request)
+        public async Task<string> AddOrUpdateUsers(AddOrUpdateUsers request)
         {
-            return await _userRepository.RegisterUser(request);
+            return await _userRepository.AddOrUpdateUsers(request);
         }
 
     }

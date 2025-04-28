@@ -1,6 +1,7 @@
 ﻿using e_commerce_backend.Data.Interfaces;
 using e_commerce_backend.DTO;
 using e_commerce_backend.DTO.Admin;
+using e_commerce_backend.DTO.Order;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
@@ -117,5 +118,71 @@ namespace e_commerce_backend.Data.Respository
                 return response;
             }
         }
+    
+        public async Task<StatusMessage> UpdateUserAccess(Guid userId)
+        {
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand("BlockOrUnblockUser", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@userId", userId);
+            await conn.OpenAsync();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            StatusMessage statusMessage = new StatusMessage();
+            if (await reader.ReadAsync())
+            {
+                statusMessage.Status = reader.GetBoolean(reader.GetOrdinal("Status"));
+                statusMessage.Message = reader.GetString(reader.GetOrdinal("Message"));
+            }
+            return statusMessage;
+        }
+
+        public async Task<StatusMessage> UpdateOrderStatus(Guid orderItemId, Guid status)
+        {
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand("UpdateOrderStatus", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@orderItemId", orderItemId);
+            cmd.Parameters.AddWithValue("@statusId", status);
+            await conn.OpenAsync();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            StatusMessage statusMessage = new StatusMessage();
+            if (await reader.ReadAsync())
+            {
+                statusMessage.Status = reader.GetBoolean(reader.GetOrdinal("Status"));
+                statusMessage.Message = reader.GetString(reader.GetOrdinal("Message"));
+            }
+            return statusMessage;
+        }
+
+        public async Task<List<OrderStatus>> GetAllOrderStatus()
+        {
+            List<OrderStatus> orderStatuses = new List<OrderStatus>();
+            using SqlConnection conn = new SqlConnection(_connectionString);
+            using SqlCommand cmd = new SqlCommand("GetAllOrderStatus", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            await conn.OpenAsync();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            if (reader.HasRows)
+            {
+                while (await reader.ReadAsync())
+                {
+                    OrderStatus orderStatus = new OrderStatus
+                    {
+                        Id = reader.GetGuid(reader.GetOrdinal("Id")),
+                        Status = reader.GetString(reader.GetOrdinal("Status"))
+                    };
+                    orderStatuses.Add(orderStatus);
+                }
+            }
+            return orderStatuses;
+        }
+
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using e_commerce_backend.DTO;
 using e_commerce_backend.DTO.Admin;
+using e_commerce_backend.DTO.Order;
 
 namespace e_commerce_backend.Data.Interfaces
 {
@@ -12,8 +13,10 @@ namespace e_commerce_backend.Data.Interfaces
         //Task<List<User>> GetAllUsers();
         //Task<List<Product>> GetAllProducts();
         //Task<List<Order>> GetAllOrders();
-        //Task<bool> UpdateUserStatus(string userId, bool isActive);
+        Task<StatusMessage> UpdateUserAccess(Guid userId);
         //Task<bool> UpdateProductStatus(string productId, bool isActive);
-        //Task<bool> UpdateOrderStatus(string orderId, string status);
+        Task<StatusMessage> UpdateOrderStatus(Guid orderItemId, Guid status);
+
+        Task<List<OrderStatus>> GetAllOrderStatus();
     }
 }

@@ -26,5 +26,41 @@ namespace e_commerce_backend.Controllers
             }
             return BadRequest(response);
         }
+
+        [Authorize]
+        [HttpPost("updateUserAccess/{userId}")]
+        public async Task<IActionResult> UpdateUserAccess(Guid userId)
+        {
+            var response = await _adminService.UpdateUserAccess(userId);
+            if (response.Status)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [Authorize]
+        [HttpPost("updateOrderStatus/{orderItemId}/{status}")]
+        public async Task<IActionResult> UpdateOrderStatus(Guid orderItemId, Guid status)
+        {
+            var response = await _adminService.UpdateOrderStatus(orderItemId, status);
+            if (response.Status)
+            {
+                return Ok(response);
+            }
+            return BadRequest(response);
+        }
+
+        [Authorize]
+        [HttpGet("getAllOrderStatus")]
+        public async Task<IActionResult> GetAllOrderStatus()
+        {
+            var response = await _adminService.GetAllOrderStatus();
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            return NotFound();
+        }
     }
 }
