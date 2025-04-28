@@ -5,6 +5,7 @@
         public Guid OrderId { get; set; }  
         public string Status { get; set; }
         
+        public string OrderNumber { get; set; }
         public string customer { get; set; }
         public DateTime PlacedAt { get; set; }
         

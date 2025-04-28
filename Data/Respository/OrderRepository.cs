@@ -63,6 +63,7 @@ namespace e_commerce_backend.Data.Respository
                         orderDetails.Add(new GetOrderDetails
                         {
                             OrderId = reader.GetGuid(reader.GetOrdinal("OrderId")),
+                            OrderNumber = reader.GetString(reader.GetOrdinal("OrderNo")),
                             customer = reader.GetString(reader.GetOrdinal("full_name")),
                             TotalAmount = reader.GetDecimal(reader.GetOrdinal("TotalAmount")),
                             PlacedAt = reader.GetDateTime(reader.GetOrdinal("PlacedAt")),
