@@ -184,6 +184,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "e_commerce_backend.Controllers.ProductController",
+    "Method": "AddOrUpdate",
+    "RelativePath": "api/Product",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "product",
+        "Type": "e_commerce_backend.DTO.PostProduct",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "e_commerce_backend.Controllers.UserController",
     "Method": "GetAll",
     "RelativePath": "api/User",
@@ -191,6 +207,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "e_commerce_backend.Controllers.UserController",
+    "Method": "Register",
+    "RelativePath": "api/User/AddOrUpdateUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "data",
+        "Type": "e_commerce_backend.DTO.AddOrUpdateUsers",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {
@@ -220,22 +252,6 @@
       {
         "Name": "request",
         "Type": "e_commerce_backend.DTO.LoginRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "e_commerce_backend.Controllers.UserController",
-    "Method": "Register",
-    "RelativePath": "api/User/register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "e_commerce_backend.DTO.AddOrUpdateUsers",
         "IsRequired": true
       }
     ],

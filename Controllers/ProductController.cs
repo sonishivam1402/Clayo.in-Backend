@@ -1,5 +1,7 @@
-﻿using e_commerce_backend.Services;
+﻿using e_commerce_backend.DTO;
+using e_commerce_backend.Services;
 using e_commerce_backend.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +23,25 @@ namespace e_commerce_backend.Controllers
         {
             var products = await _productService.GetAllProducts();
             return Ok(products);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> AddOrUpdate([FromBody] PostProduct product)
+        {
+            if (product == null)
+            {
+                return BadRequest("Product cannot be null");
+            }
+            var result = await _productService.AddOrUpdateProduct(product);
+            if (result.Status)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
         }
     }
 }

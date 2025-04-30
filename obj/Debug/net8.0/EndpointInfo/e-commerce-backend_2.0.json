@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "e-commerce-backend",
-    "version": "1.0"
+    "title": "Your API",
+    "version": "2.0"
   },
   "paths": {
     "/api/Admin/dashboard/{userId}/{roleId}": {
@@ -435,7 +435,7 @@
             "type": "string",
             "nullable": true
           },
-          "password_hash": {
+          "password": {
             "type": "string",
             "nullable": true
           },

@@ -6,5 +6,7 @@ namespace e_commerce_backend.Services.Interfaces
     public interface IProductService
     {
         Task<IEnumerable<GetProduct>> GetAllProducts();
+
+        Task<StatusMessage> AddOrUpdateProduct(PostProduct product);
     }
 }

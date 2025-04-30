@@ -88,10 +88,10 @@ namespace e_commerce_backend.Controllers
 
 
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] AddOrUpdateUsers request)
+        [HttpPost("AddOrUpdateUser")]
+        public async Task<IActionResult> Register([FromBody]AddOrUpdateUsers data)
         {
-            var result = await _userService.AddOrUpdateUsers(request);
+            var result = await _userService.AddOrUpdateUsers(data);
             return Ok(new { Message = result });
         }
     }

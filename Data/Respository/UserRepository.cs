@@ -56,6 +56,7 @@ namespace e_commerce_backend.Data.Respository
                     Name = reader.GetString(reader.GetOrdinal("full_name")),
                     Email = reader.GetString(reader.GetOrdinal("Email")),
                     Mobile_no = reader.GetString(reader.GetOrdinal("phone_number")),
+                    password_hash = reader.GetString(reader.GetOrdinal("password_hash")),
                     Role = reader.GetString(reader.GetOrdinal("Role_name")),
                     address = reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader.GetString(reader.GetOrdinal("address")),
                     profile_picture = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
@@ -126,11 +127,13 @@ namespace e_commerce_backend.Data.Respository
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Parameters.AddWithValue("@id", request.Id);
-            cmd.Parameters.AddWithValue("@name", request.Name);
-            cmd.Parameters.AddWithValue("@email", request.Email);
-            cmd.Parameters.AddWithValue("@phone_number", request.PhoneNumber);
-            cmd.Parameters.AddWithValue("@password", request.Password);
+            cmd.Parameters.AddWithValue("@id", request.Id ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@name", request.name);
+            cmd.Parameters.AddWithValue("@email", request.email);
+            cmd.Parameters.AddWithValue("@phone_number", request.mobile_no);
+            cmd.Parameters.AddWithValue("@password", request.password_hash);
+            cmd.Parameters.AddWithValue("@address", request.address ?? (object)DBNull.Value);
+            cmd.Parameters.AddWithValue("@image", request.profile_picture ?? (object)DBNull.Value);
 
             await conn.OpenAsync();
 
@@ -156,7 +159,7 @@ namespace e_commerce_backend.Data.Respository
                 Email = reader.GetString(reader.GetOrdinal("Email")),
                 Mobile_no = reader.GetString(reader.GetOrdinal("phone_number")),
                 Role = reader.GetString(reader.GetOrdinal("Role_name")),
-                address = reader.GetString(reader.GetOrdinal("address")),
+                address = reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader.GetString(reader.GetOrdinal("address")),
                 hasAccess = reader.GetBoolean(reader.GetOrdinal("hasAccess")),
                 isVerified = reader.GetBoolean(reader.GetOrdinal("is_verified")),
                 profile_picture = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),

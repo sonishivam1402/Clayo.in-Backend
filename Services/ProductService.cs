@@ -18,5 +18,10 @@ namespace e_commerce_backend.Services
             return await _productRepository.GetAllProductsAsync();
         }
 
+        public async Task<StatusMessage> AddOrUpdateProduct(PostProduct product)
+        {
+            return await _productRepository.AddOrUpdateProduct(product);
+        }
+
     }
 }
