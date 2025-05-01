@@ -126,6 +126,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "e_commerce_backend.Controllers.EmailController",
+    "Method": "SendEmail",
+    "RelativePath": "api/Email/send",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "e_commerce_backend.Models.SendEmailRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "e_commerce_backend.Controllers.OrderController",
     "Method": "CancelOrder",
     "RelativePath": "api/Order/CancelOrder",

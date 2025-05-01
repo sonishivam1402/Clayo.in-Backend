@@ -98,6 +98,7 @@ namespace e_commerce_backend.Data.Respository
                     {
                         id = reader.GetGuid(reader.GetOrdinal("Id")),
                         name = reader.GetString(reader.GetOrdinal("full_name")),
+                        email = reader.GetString(reader.GetOrdinal("email")),
                         roleId = reader.GetGuid(reader.GetOrdinal("Role_id")),
                         profileImage = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
                         cartId = reader.IsDBNull(reader.GetOrdinal("cartId")) ? null : reader.GetGuid(reader.GetOrdinal("cartId")),
