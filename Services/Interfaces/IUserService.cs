@@ -10,6 +10,6 @@ namespace e_commerce_backend.Services.Interfaces
         Task<User> GetUserById(Guid id);
         Task<AuthResponse> AuthUser(string email, string password);
 
-        Task<string> AddOrUpdateUsers(AddOrUpdateUsers request);
+        Task<ServiceResponse<OtpVerification>> AddOrUpdateUsers(AddOrUpdateUsers request);
     }
 }

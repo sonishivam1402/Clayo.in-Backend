@@ -1,4 +1,6 @@
-﻿using e_commerce_backend.DTO;
+﻿using e_commerce_backend.Data.Interfaces;
+using e_commerce_backend.DTO;
+using e_commerce_backend.DTO.Order;
 using e_commerce_backend.Models;
 using e_commerce_backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -7,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace e_commerce_backend.Controllers
 {
@@ -16,11 +19,13 @@ namespace e_commerce_backend.Controllers
     {
         private readonly IUserService _userService;
         private readonly IConfiguration _config;
+        private readonly IEmailRepository _emailRepository;
 
-        public UserController(IConfiguration config,IUserService userService)
+        public UserController(IConfiguration config,IUserService userService, IEmailRepository emailRepository)
         {
             _config = config;
             _userService = userService;
+            _emailRepository = emailRepository;
         }
 
         [Authorize]
@@ -92,7 +97,26 @@ namespace e_commerce_backend.Controllers
         public async Task<IActionResult> Register([FromBody]AddOrUpdateUsers data)
         {
             var result = await _userService.AddOrUpdateUsers(data);
-            return Ok(new { Message = result });
+            if (result.Status)
+            {
+                var modelObj = new { Otp = result.Data.Otp };
+                string jsonModel = JsonSerializer.Serialize(modelObj);
+
+                var emailRequest = new SendEmailRequest
+                {
+                    ToEmail = result.Data.Email,
+                    TemplateName = "Otp Verification",
+                    ModelJson = jsonModel
+                };
+
+                // Trigger the SendEmail method
+                await _emailRepository.SendEmailAsync<OtpVerification>(emailRequest);
+                return Ok(result.Message);
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
         }
     }
 }

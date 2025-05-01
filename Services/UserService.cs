@@ -29,7 +29,7 @@ namespace e_commerce_backend.Services
             return  await _userRepository.AuthenticateUser(email,password);
         }
 
-        public async Task<string> AddOrUpdateUsers(AddOrUpdateUsers request)
+        public async Task<ServiceResponse<OtpVerification>> AddOrUpdateUsers(AddOrUpdateUsers request)
         {
             return await _userRepository.AddOrUpdateUsers(request);
         }
