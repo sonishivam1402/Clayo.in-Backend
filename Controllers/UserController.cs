@@ -110,12 +110,26 @@ namespace e_commerce_backend.Controllers
                 };
 
                 // Trigger the SendEmail method
-                await _emailRepository.SendEmailAsync<OtpVerification>(emailRequest);
-                return Ok(result.Message);
+                await _emailRepository.SendEmailAsync<SendOtpEmailRequest>(emailRequest);
+                return Ok(new { Message = result.Message, Id = result.Data.UserId });
             }
             else
             {
                 return BadRequest(result.Message);
+            }
+        }
+
+        [HttpPost("VerifyUser")]
+        public async Task<IActionResult> VerifyUser([FromBody] VerifyAndUseOtp request)
+        {
+            var result = await _userService.VerifyUser(request);
+            if (result.Status)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
             }
         }
     }

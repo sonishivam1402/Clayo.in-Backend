@@ -29,9 +29,14 @@ namespace e_commerce_backend.Services
             return  await _userRepository.AuthenticateUser(email,password);
         }
 
-        public async Task<ServiceResponse<OtpVerification>> AddOrUpdateUsers(AddOrUpdateUsers request)
+        public async Task<ServiceResponse<SendOtpEmailRequest>> AddOrUpdateUsers(AddOrUpdateUsers request)
         {
             return await _userRepository.AddOrUpdateUsers(request);
+        }
+
+        public async Task<StatusMessage> VerifyUser(VerifyAndUseOtp request)
+        {
+            return await _userRepository.VerifyUser(request);
         }
 
     }

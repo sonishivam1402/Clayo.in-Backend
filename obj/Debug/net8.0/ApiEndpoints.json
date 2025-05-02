@@ -272,5 +272,21 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "e_commerce_backend.Controllers.UserController",
+    "Method": "VerifyUser",
+    "RelativePath": "api/User/VerifyUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "e_commerce_backend.Models.VerifyAndUseOtp",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

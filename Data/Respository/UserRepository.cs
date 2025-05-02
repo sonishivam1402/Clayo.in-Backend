@@ -121,10 +121,10 @@ namespace e_commerce_backend.Data.Respository
 
         }
 
-        public async Task<ServiceResponse<OtpVerification>> AddOrUpdateUsers(AddOrUpdateUsers request)
+        public async Task<ServiceResponse<SendOtpEmailRequest>> AddOrUpdateUsers(AddOrUpdateUsers request)
         {
-            ServiceResponse<OtpVerification> serviceResponse = new ServiceResponse<OtpVerification>();
-            OtpVerification otpVerification = new OtpVerification();
+            ServiceResponse<SendOtpEmailRequest> serviceResponse = new ServiceResponse<SendOtpEmailRequest>();
+            SendOtpEmailRequest otpVerification = new SendOtpEmailRequest();
             using SqlConnection conn = new(_connectionString);
             using SqlCommand cmd = new("AddOrUpdateUser", conn)
             {
@@ -146,6 +146,7 @@ namespace e_commerce_backend.Data.Respository
             {
                 serviceResponse.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
                 serviceResponse.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
+                otpVerification.UserId = reader.IsDBNull(reader.GetOrdinal("UserId")) ? Guid.Empty : reader.GetGuid(reader.GetOrdinal("UserId"));
                 otpVerification.Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString(reader.GetOrdinal("Email"));
                 otpVerification.Otp = reader.IsDBNull(reader.GetOrdinal("OTP")) ? null : reader.GetString(reader.GetOrdinal("OTP"));
                 serviceResponse.Data = otpVerification;
@@ -158,6 +159,31 @@ namespace e_commerce_backend.Data.Respository
             }
 
             return serviceResponse;
+        }
+
+        public async Task<StatusMessage> VerifyUser(VerifyAndUseOtp request)
+        {
+            StatusMessage statusMessage = new StatusMessage();
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("VerifyAndUseOTP", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@UserId", request.userId);
+            cmd.Parameters.AddWithValue("@InputOTP", request.otp);
+            await conn.OpenAsync();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            if (reader.Read())
+            {
+                statusMessage.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
+                statusMessage.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
+            }
+            else
+            {
+                statusMessage.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
+                statusMessage.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
+            }
+            return statusMessage;
         }
 
 

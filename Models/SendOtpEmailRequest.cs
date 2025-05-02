@@ -1,9 +1,9 @@
 ﻿namespace e_commerce_backend.Models
 {
-    public class OtpVerification
+    public class SendOtpEmailRequest
     {
         public string Otp { get; set; }
-
+        public Guid UserId { get; set; }
         public string Email { get; set; }
     }
 }
