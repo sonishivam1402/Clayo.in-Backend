@@ -98,6 +98,7 @@ namespace e_commerce_backend.Data.Respository
                     {
                         id = reader.GetGuid(reader.GetOrdinal("Id")),
                         name = reader.GetString(reader.GetOrdinal("full_name")),
+                        email = reader.GetString(reader.GetOrdinal("email")),
                         roleId = reader.GetGuid(reader.GetOrdinal("Role_id")),
                         profileImage = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
                         cartId = reader.IsDBNull(reader.GetOrdinal("cartId")) ? null : reader.GetGuid(reader.GetOrdinal("cartId")),
@@ -120,8 +121,10 @@ namespace e_commerce_backend.Data.Respository
 
         }
 
-        public async Task<string> AddOrUpdateUsers(AddOrUpdateUsers request)
+        public async Task<ServiceResponse<SendOtpEmailRequest>> AddOrUpdateUsers(AddOrUpdateUsers request)
         {
+            ServiceResponse<SendOtpEmailRequest> serviceResponse = new ServiceResponse<SendOtpEmailRequest>();
+            SendOtpEmailRequest otpVerification = new SendOtpEmailRequest();
             using SqlConnection conn = new(_connectionString);
             using SqlCommand cmd = new("AddOrUpdateUser", conn)
             {
@@ -138,14 +141,49 @@ namespace e_commerce_backend.Data.Respository
             await conn.OpenAsync();
 
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
-            string response = string.Empty;
 
-            if (await reader.ReadAsync())
+            if (reader.Read())
             {
-                response = reader["Message"].ToString();
+                serviceResponse.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
+                serviceResponse.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
+                otpVerification.UserId = reader.IsDBNull(reader.GetOrdinal("UserId")) ? Guid.Empty : reader.GetGuid(reader.GetOrdinal("UserId"));
+                otpVerification.Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString(reader.GetOrdinal("Email"));
+                otpVerification.Otp = reader.IsDBNull(reader.GetOrdinal("OTP")) ? null : reader.GetString(reader.GetOrdinal("OTP"));
+                serviceResponse.Data = otpVerification;
+            }
+            else
+            {
+                serviceResponse.Status = false;
+                serviceResponse.Message = "No data returned from stored procedure.";
+                serviceResponse.Data = null;
             }
 
-            return response;
+            return serviceResponse;
+        }
+
+        public async Task<StatusMessage> VerifyUser(VerifyAndUseOtp request)
+        {
+            StatusMessage statusMessage = new StatusMessage();
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("VerifyAndUseOTP", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@UserId", request.userId);
+            cmd.Parameters.AddWithValue("@InputOTP", request.otp);
+            await conn.OpenAsync();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            if (reader.Read())
+            {
+                statusMessage.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
+                statusMessage.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
+            }
+            else
+            {
+                statusMessage.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
+                statusMessage.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
+            }
+            return statusMessage;
         }
 
 

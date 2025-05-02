@@ -7,6 +7,8 @@ namespace e_commerce_backend.DTO
         public StatusMessage? StatusMessage { get; set; } 
         public Guid id { get; set; }
         public string name { get; set; }
+
+        public string email { get; set; }
         public Guid roleId { get; set; }
         public string? profileImage { get; set; }
 

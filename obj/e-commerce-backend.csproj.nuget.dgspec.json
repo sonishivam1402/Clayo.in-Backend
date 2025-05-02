@@ -58,9 +58,17 @@
               "target": "Package",
               "version": "[6.0.1, )"
             },
+            "RazorLight": {
+              "target": "Package",
+              "version": "[2.3.1, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[8.1.1, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[9.0.4, )"
             }
           },
           "imports": [
