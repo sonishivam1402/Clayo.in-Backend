@@ -67,59 +67,59 @@ namespace e_commerce_backend.Data.Respository
             return user;
         }
 
-        public async Task<AuthResponse> AuthenticateUser(string email, string password)
-        {
-            using SqlConnection conn = new(_connectionString);
-            using SqlCommand cmd = new("GetUserByEmail", conn)
-            {
-                CommandType = CommandType.StoredProcedure
-            };
+        //public async Task<AuthResponse> AuthenticateUser(string email, string password)
+        //{
+        //    using SqlConnection conn = new(_connectionString);
+        //    using SqlCommand cmd = new("GetUserByEmail", conn)
+        //    {
+        //        CommandType = CommandType.StoredProcedure
+        //    };
 
-            cmd.Parameters.AddWithValue("email", email);
-            cmd.Parameters.AddWithValue("password_hash", password);
-            await conn.OpenAsync();
-            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+        //    cmd.Parameters.AddWithValue("email", email);
+        //    cmd.Parameters.AddWithValue("password_hash", password);
+        //    await conn.OpenAsync();
+        //    using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-            if (reader.HasRows && await reader.ReadAsync())
-            {
-                if(reader.FieldCount == 1 && reader.GetName(0) == "MESSAGE")
-                {
-                    return new AuthResponse
-                    {
-                        StatusMessage = new StatusMessage
-                        {
-                            Status = false,
-                            Message = reader["MESSAGE"].ToString()
-                        }
-                    };
-                }
-                else{
-                    return new AuthResponse
-                    {
-                        id = reader.GetGuid(reader.GetOrdinal("Id")),
-                        name = reader.GetString(reader.GetOrdinal("full_name")),
-                        email = reader.GetString(reader.GetOrdinal("email")),
-                        roleId = reader.GetGuid(reader.GetOrdinal("Role_id")),
-                        profileImage = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
-                        cartId = reader.IsDBNull(reader.GetOrdinal("cartId")) ? null : reader.GetGuid(reader.GetOrdinal("cartId")),
-                        StatusMessage = new StatusMessage
-                        {
-                            Status = true,
-                            Message = "Login successful"
-                        }
-                    };
-                }
-            }
-            return new AuthResponse 
-            {   
-                StatusMessage = new StatusMessage
-                {
-                    Status = false,
-                    Message = "Invalid email or password"
-                }
-            };
+        //    if (reader.HasRows && await reader.ReadAsync())
+        //    {
+        //        if(reader.FieldCount == 1 && reader.GetName(0) == "MESSAGE")
+        //        {
+        //            return new AuthResponse
+        //            {
+        //                StatusMessage = new StatusMessage
+        //                {
+        //                    Status = false,
+        //                    Message = reader["MESSAGE"].ToString()
+        //                }
+        //            };
+        //        }
+        //        else{
+        //            return new AuthResponse
+        //            {
+        //                id = reader.GetGuid(reader.GetOrdinal("Id")),
+        //                name = reader.GetString(reader.GetOrdinal("full_name")),
+        //                email = reader.GetString(reader.GetOrdinal("email")),
+        //                roleId = reader.GetGuid(reader.GetOrdinal("Role_id")),
+        //                profileImage = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
+        //                cartId = reader.IsDBNull(reader.GetOrdinal("cartId")) ? null : reader.GetGuid(reader.GetOrdinal("cartId")),
+        //                StatusMessage = new StatusMessage
+        //                {
+        //                    Status = true,
+        //                    Message = "Login successful"
+        //                }
+        //            };
+        //        }
+        //    }
+        //    return new AuthResponse 
+        //    {   
+        //        StatusMessage = new StatusMessage
+        //        {
+        //            Status = false,
+        //            Message = "Invalid email or password"
+        //        }
+        //    };
 
-        }
+        //}
 
         public async Task<ServiceResponse<SendOtpEmailRequest>> AddOrUpdateUsers(AddOrUpdateUsers request)
         {

@@ -8,7 +8,7 @@ namespace e_commerce_backend.Services.Interfaces
         Task<IEnumerable<User>> GetAllUsers();
         
         Task<User> GetUserById(Guid id);
-        Task<AuthResponse> AuthUser(string email, string password);
+        //Task<AuthResponse> AuthUser(string email, string password);
 
         Task<ServiceResponse<SendOtpEmailRequest>> AddOrUpdateUsers(AddOrUpdateUsers request);
 
