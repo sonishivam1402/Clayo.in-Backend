@@ -86,7 +86,7 @@ namespace e_commerce_backend.Data.Respository
             {
                 await connection.OpenAsync();
 
-                using (var command = new SqlCommand("SELECT COUNT(*) FROM RefreshTokens WHERE UserId=@UserId AND Token=@Token AND ExpiresAt > GETDATE() AND IsRevoked=0", connection))
+                using (var command = new SqlCommand("SELECT COUNT(*) FROM RefreshTokens WHERE UserId=@UserId AND Token=@Token AND ExpiresAt > GETUTCDATE() AND IsRevoked=0", connection))
                 {
                     command.Parameters.AddWithValue("@UserId", userId);
                     command.Parameters.AddWithValue("@Token", refreshToken);

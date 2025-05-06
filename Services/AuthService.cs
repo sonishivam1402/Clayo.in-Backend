@@ -30,7 +30,8 @@ namespace e_commerce_backend.Services
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.email),
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName),
                 new Claim("UserId", user.UserId.ToString())
             };
 
@@ -77,7 +78,7 @@ namespace e_commerce_backend.Services
                 Token = newAccessToken,
                 RefreshToken = newRefreshToken,
                 UserId = userId,
-                UserName = principal.Claims.First(c => c.Type == JwtRegisteredClaimNames.Email).Value
+                UserName = principal.Claims.First(c => c.Type == JwtRegisteredClaimNames.Name).Value
             };
         }
 
