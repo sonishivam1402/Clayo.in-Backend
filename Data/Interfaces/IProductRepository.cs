@@ -6,6 +6,7 @@ namespace e_commerce_backend.Data.Interfaces
     {
         Task<IEnumerable<GetProduct>> GetAllProductsAsync();
 
+        Task<GetProduct> GetProductByIdAsync(Guid productId);
         Task<StatusMessage> AddOrUpdateProduct(PostProduct product);
     }
 }

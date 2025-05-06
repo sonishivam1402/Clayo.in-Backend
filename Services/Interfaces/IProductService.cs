@@ -7,6 +7,7 @@ namespace e_commerce_backend.Services.Interfaces
     {
         Task<IEnumerable<GetProduct>> GetAllProducts();
 
+        Task<GetProduct> GetProductById(Guid productId);
         Task<StatusMessage> AddOrUpdateProduct(PostProduct product);
     }
 }

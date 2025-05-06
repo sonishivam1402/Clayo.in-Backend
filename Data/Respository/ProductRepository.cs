@@ -37,6 +37,25 @@ namespace e_commerce_backend.Data.Respository
 
         }
 
+
+        public async Task<GetProduct> GetProductByIdAsync(Guid productId)
+        {
+            GetProduct product = null;
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("GetProductByProductId", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@productId", productId);
+            await conn.OpenAsync();
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+            if (await reader.ReadAsync())
+            {
+                product = MapToProduct(reader);
+            }
+            return product;
+        }
+
         public async Task<StatusMessage> AddOrUpdateProduct(PostProduct product)
         {   
             StatusMessage statusMessage = new StatusMessage();
