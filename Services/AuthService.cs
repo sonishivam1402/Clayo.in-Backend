@@ -23,36 +23,63 @@ namespace e_commerce_backend.Services
 
         public async Task<AuthResponse> LoginAsync(string email, string password)
         {
-            var user = await _authRepo.ValidateUserAsync(email, password);
-            if (user == null)
-                return new AuthResponse { isSuccess = false, Message = "Invalid credentials" };
-
-            var claims = new[]
+            try
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Email, user.email),
-                new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-                new Claim("UserId", user.UserId.ToString())
-            };
+                var user = await _authRepo.ValidateUserAsync(email, password);
 
-            var accessToken = GenerateJwtToken(claims);
-            var refreshToken = GenerateRefreshToken();
+                if (user == null || !user.isSuccess)
+                {
+                    return new AuthResponse
+                    {
+                        isSuccess = false,
+                        Message = user?.Message ?? "Invalid credentials"
+                    };
+                }
 
-            await _authRepo.SaveRefreshTokenAsync(user.UserId, refreshToken, DateTime.UtcNow.AddMinutes(_jwtSettings.RefreshTokenExpiryInMinutes));
+                // Safe Claims creation (null-safe)
+                var claims = new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Email, user.email ?? string.Empty),
+                    new Claim(JwtRegisteredClaimNames.Name, user.UserName ?? string.Empty),
+                    new Claim("UserId", user.UserId.ToString()),
+                    new Claim("RoleId", user.roleId.ToString())
+                };
 
-            return new AuthResponse
+                var accessToken = GenerateJwtToken(claims);
+                var refreshToken = GenerateRefreshToken();
+
+                await _authRepo.SaveRefreshTokenAsync(
+                    user.UserId,
+                    refreshToken,
+                    DateTime.UtcNow.AddMinutes(_jwtSettings.RefreshTokenExpiryInMinutes)
+                );
+
+                return new AuthResponse
+                {
+                    isSuccess = true,
+                    Token = accessToken,
+                    RefreshToken = refreshToken,
+                    UserId = user.UserId,
+                    UserName = user.UserName ?? string.Empty,
+                    email = user.email ?? string.Empty,
+                    roleId = user.roleId,
+                    profileImage = user.profileImage,
+                    cartId = user.cartId,
+                    Message = "Login Successful"
+                };
+            }
+            catch (Exception ex)
             {
-                isSuccess = true,
-                Token = accessToken,
-                RefreshToken = refreshToken,
-                UserId = user.UserId,
-                UserName = user.UserName,
-                email = user.email,
-                roleId = user.roleId,
-                profileImage = user.profileImage,
-                cartId = user.cartId
-            };
+                // Log ex here (optional)
+                return new AuthResponse
+                {
+                    isSuccess = false,
+                    Message = $"An error occurred: {ex.Message}"
+                };
+            }
         }
+
 
         public async Task<AuthResponse> RefreshTokenAsync(string accessToken, string refreshToken)
         {

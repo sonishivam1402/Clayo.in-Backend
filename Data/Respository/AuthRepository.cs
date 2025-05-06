@@ -17,42 +17,42 @@ namespace e_commerce_backend.Data.Respository
         public async Task<AuthResponse> ValidateUserAsync(string email, string password)
         {
             using SqlConnection conn = new(_config.GetConnectionString("DefaultConnection"));
-            using SqlCommand cmd = new("GetUserByEmail", conn) 
+            using SqlCommand cmd = new("GetUserByEmail", conn)
             {
                 CommandType = CommandType.StoredProcedure
             };
 
             cmd.Parameters.AddWithValue("@email", email);
-            cmd.Parameters.AddWithValue("@password_hash", password); 
+            cmd.Parameters.AddWithValue("@password_hash", password);
 
             await conn.OpenAsync();
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
 
-            if (reader.HasRows && await reader.ReadAsync())
+            if (await reader.ReadAsync())
             {
-                // Check if it's an error message return
-                if (reader.FieldCount == 1 && reader.GetName(0).Equals("MESSAGE", StringComparison.OrdinalIgnoreCase))
+                int status = reader.GetInt32(reader.GetOrdinal("Status"));
+                string message = reader.GetString(reader.GetOrdinal("Message"));
+
+                if (status == 0)
                 {
                     return new AuthResponse
                     {
                         isSuccess = false,
-                        Message = reader["MESSAGE"].ToString()
+                        Message = message
                     };
                 }
-                else
+
+                return new AuthResponse
                 {
-                    return new AuthResponse
-                    {
-                        UserId = reader.GetGuid(reader.GetOrdinal("Id")),
-                        UserName = reader.GetString(reader.GetOrdinal("full_name")),
-                        email = reader.GetString(reader.GetOrdinal("email")),
-                        roleId = reader.GetGuid(reader.GetOrdinal("Role_id")),
-                        profileImage = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
-                        cartId = reader.IsDBNull(reader.GetOrdinal("cartId")) ? null : reader.GetGuid(reader.GetOrdinal("cartId")),
-                        isSuccess = true,
-                        Message = "Login successful"
-                    };
-                }
+                    UserId = reader.IsDBNull(reader.GetOrdinal("id")) ? Guid.Empty : reader.GetGuid(reader.GetOrdinal("id")),
+                    UserName = reader.IsDBNull(reader.GetOrdinal("full_name")) ? null : reader.GetString(reader.GetOrdinal("full_name")),
+                    email = reader.IsDBNull(reader.GetOrdinal("email")) ? null : reader.GetString(reader.GetOrdinal("email")),
+                    roleId = reader.IsDBNull(reader.GetOrdinal("role_id")) ? Guid.Empty : reader.GetGuid(reader.GetOrdinal("role_id")),
+                    profileImage = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
+                    cartId = reader.IsDBNull(reader.GetOrdinal("CartId")) ? (Guid?)null : reader.GetGuid(reader.GetOrdinal("CartId")),
+                    isSuccess = true,
+                    Message = message
+                };
             }
 
             return new AuthResponse
@@ -61,6 +61,7 @@ namespace e_commerce_backend.Data.Respository
                 Message = "Invalid email or password"
             };
         }
+
 
 
         public async Task SaveRefreshTokenAsync(Guid userId, string refreshToken, DateTime expiresAt)
