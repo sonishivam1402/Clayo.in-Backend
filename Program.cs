@@ -37,6 +37,10 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 
 builder.Services.AddScoped<IEmailRepository, EmailRepository>();
 
+builder.Services.AddScoped<IRecentlyViewedRepository, RecentlyViewedRepository>();
+builder.Services.AddScoped<IRecentlyViewedService, RecentlyViewedService>();
+
+
 
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));

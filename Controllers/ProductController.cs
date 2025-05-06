@@ -25,6 +25,17 @@ namespace e_commerce_backend.Controllers
             return Ok(products);
         }
 
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetById(Guid productId)
+        {
+            var product = await _productService.GetProductById(productId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return Ok(product);
+        }
+
         [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddOrUpdate([FromBody] PostProduct product)
