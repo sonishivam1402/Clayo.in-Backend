@@ -23,9 +23,9 @@ namespace e_commerce_backend.Services
             return await _cartRepository.AddToCartAsync(cartItem);
         }
 
-        public async Task<StatusMessage> DeleteCartItemAsync(Guid cartId, Guid productId)
+        public async Task<StatusMessage> DeleteCartItemAsync(Guid userId, Guid cartId, Guid cartItemId, Guid productId)
         {
-            return await _cartRepository.DeleteCartItemAsync(cartId, productId);
+            return await _cartRepository.DeleteCartItemAsync(userId, cartId, cartItemId, productId);
         }
     }
 }

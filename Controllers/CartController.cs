@@ -4,12 +4,13 @@ using e_commerce_backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace e_commerce_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CartController : ControllerBase
+    public class CartController : BaseController
     {
         private readonly ICartService _cartService;
         public CartController(ICartService cartService)
@@ -18,10 +19,14 @@ namespace e_commerce_backend.Controllers
         }
 
         [Authorize]
-        [HttpGet("{userId}/{cartId}")]
-        public async Task<IActionResult> GetAllCartItems(Guid cartId, Guid userId)
+        [HttpGet("{cartId}")]
+        public async Task<IActionResult> GetAllCartItems(Guid cartId)
         {
-            var cartItems = await _cartService.GetAllCartItemsAsync(cartId, userId);
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized("User Id not found");
+
+            var cartItems = await _cartService.GetAllCartItemsAsync(cartId, (Guid)userId);
             if (cartItems.GetType() == typeof(List<GetCartItems>))
             {
                 return Ok(cartItems);
@@ -29,14 +34,19 @@ namespace e_commerce_backend.Controllers
             else
             {
                 return NotFound(cartItems);
-            }
-            
+            }    
         }
 
         [Authorize]
         [HttpPost("addOrUpdate")]
         public async Task<IActionResult> AddToCart([FromBody] AddToCart cartItem)
         {
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized("User Id not found");
+
+            cartItem.UserId = (Guid)userId;
+
             var result = await _cartService.AddToCartAsync(cartItem);
             if (result.Status)
             {
@@ -46,10 +56,14 @@ namespace e_commerce_backend.Controllers
         }
 
         [Authorize]
-        [HttpDelete("delete/{cartId}/{productId}")]
-        public async Task<IActionResult> DeleteCartItem( Guid cartId, Guid productId)
+        [HttpDelete("delete/{cartId}/{cartItemId}/{productId}")]
+        public async Task<IActionResult> DeleteCartItem( Guid cartId, Guid cartItemId, Guid productId)
         {
-            var result = await _cartService.DeleteCartItemAsync(cartId, productId);
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized("User Id not found");
+
+            var result = await _cartService.DeleteCartItemAsync((Guid)userId, cartId, cartItemId, productId);
             if (result.Status)
             {
                 return Ok(result.Message);

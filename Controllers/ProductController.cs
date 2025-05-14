@@ -9,7 +9,7 @@ namespace e_commerce_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController : BaseController
     {
         private readonly IProductService _productService;
 
@@ -40,6 +40,9 @@ namespace e_commerce_backend.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrUpdate([FromBody] PostProduct product)
         {
+            var hasAccess = GetRoleAccess();
+            if (hasAccess) return Unauthorized("You are not authorized to access this page.");
+
             if (product == null)
             {
                 return BadRequest("Product cannot be null");

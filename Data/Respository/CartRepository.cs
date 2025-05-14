@@ -83,7 +83,7 @@ namespace e_commerce_backend.Data.Respository
         }
 
 
-        public async Task<StatusMessage> DeleteCartItemAsync(Guid cartId, Guid productId)
+        public async Task<StatusMessage> DeleteCartItemAsync(Guid userId, Guid cartId, Guid cartItemId, Guid productId)
         {
             StatusMessage statusMessage = new StatusMessage();
             using SqlConnection conn = new SqlConnection(connectionString);
@@ -91,6 +91,8 @@ namespace e_commerce_backend.Data.Respository
             {
                 CommandType = CommandType.StoredProcedure
             };
+            cmd.Parameters.AddWithValue("userId", userId);
+            cmd.Parameters.AddWithValue("cartItemId", cartItemId);
             cmd.Parameters.AddWithValue("@cartId", cartId);
             cmd.Parameters.AddWithValue("@productId", productId);
             await conn.OpenAsync();

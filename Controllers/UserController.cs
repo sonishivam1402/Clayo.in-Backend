@@ -15,7 +15,7 @@ namespace e_commerce_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IConfiguration _config;
@@ -32,15 +32,22 @@ namespace e_commerce_backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
+            var hasAccess = GetRoleAccess();
+            if (hasAccess) return Unauthorized("You are not authorized to access this page.");
+
             var users = await _userService.GetAllUsers();
             return Ok(users);
         }
 
         [Authorize]
-        [HttpPost("Id/{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpPost("Id")]
+        public async Task<IActionResult> GetById()
         {
-            var user = await _userService.GetUserById(id);
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized("User Id not found");
+
+            var user = await _userService.GetUserById((Guid)userId);
             if (user == null)
             {
                 return NotFound();

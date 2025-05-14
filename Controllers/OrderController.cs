@@ -12,7 +12,7 @@ namespace e_commerce_backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderController : ControllerBase
+    public class OrderController : BaseController
     {
         private readonly IOrderService _orderService;
         private readonly IEmailRepository _emailRepository;
@@ -26,6 +26,11 @@ namespace e_commerce_backend.Controllers
         [HttpPost("PlaceOrder")]
         public async Task<IActionResult> PlaceOrder([FromBody] PlaceOrder order)
         {
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized("User Id not found");
+
+            order.userId = (Guid)userId;
             var result = await _orderService.PlaceOrder(order);
             if (result.Status)
             {
@@ -63,8 +68,12 @@ namespace e_commerce_backend.Controllers
 
         [Authorize]
         [HttpGet("GetOrderDetails")]
-        public async Task<IActionResult> GetOrderDetails([FromQuery]Guid? userId)
+        public async Task<IActionResult> GetOrderDetails()
         {
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized("User Id not found");
+
             var result = await _orderService.GetOrderDetails(userId);
             if(result.GetType() == typeof(List<StatusMessage>))
             {
