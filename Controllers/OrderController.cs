@@ -87,9 +87,13 @@ namespace e_commerce_backend.Controllers
 
         [Authorize]
         [HttpDelete("CancelOrder")]
-        public async Task<IActionResult> CancelOrder([FromQuery] Guid orderId)
+        public async Task<IActionResult> CancelOrder([FromQuery] Guid orderId, Guid orderItemId)
         {
-            var result = await _orderService.CancelOrder(orderId);
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized("User Id not found");
+
+            var result = await _orderService.CancelOrder((Guid)userId, orderId, orderItemId);
             if (result.Status)
             {
                 return Ok(result);

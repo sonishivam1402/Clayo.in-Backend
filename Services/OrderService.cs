@@ -21,9 +21,9 @@ namespace e_commerce_backend.Services
             return await _orderRepository.GetOrderDetails(userId);
         }
 
-        public async Task<StatusMessage> CancelOrder(Guid orderId)
+        public async Task<StatusMessage> CancelOrder(Guid userId, Guid orderId, Guid orderItemId)
         {
-            return await _orderRepository.CancelOrder(orderId);
+            return await _orderRepository.CancelOrder(userId, orderId, orderItemId);
         }
     }    
     

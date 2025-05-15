@@ -33,7 +33,7 @@ namespace e_commerce_backend.Controllers
         public async Task<IActionResult> GetAll()
         {
             var hasAccess = GetRoleAccess();
-            if (hasAccess) return Unauthorized("You are not authorized to access this page.");
+            if (!hasAccess) return Unauthorized("You are not authorized to access this page.");
 
             var users = await _userService.GetAllUsers();
             return Ok(users);

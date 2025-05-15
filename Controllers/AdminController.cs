@@ -1,4 +1,5 @@
-﻿using e_commerce_backend.Services.Interfaces;
+﻿using e_commerce_backend.DTO;
+using e_commerce_backend.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,20 @@ namespace e_commerce_backend.Controllers
     public class AdminController : BaseController
     {
         private readonly IAdminService _adminService;
-        public AdminController(IAdminService adminService)
+        private readonly IOrderService _orderService;
+        public AdminController(IAdminService adminService, IOrderService orderService)
         {
             _adminService = adminService;
+            _orderService = orderService;
         }
 
         [Authorize]
         [HttpGet("dashboard")]
         public async Task<IActionResult> GetDashboardData()
         {
+            var hasAccess = GetRoleAccess();
+            if (!hasAccess) return Unauthorized("You are not authorized to access this page.");
+
             var userId = GetUserId();
             if (userId == null)
                 return Unauthorized("User Id not found");
@@ -27,9 +33,6 @@ namespace e_commerce_backend.Controllers
             var roleId = GetRoleId();
             if (roleId == null)
                 return Unauthorized("Role Id not found");
-
-            var hasAccess = GetRoleAccess();
-            if (hasAccess) return Unauthorized("You are not authorized to access this page.");
 
             var response = await _adminService.GetDashboardData((Guid)userId, (Guid)roleId);
             if (response.Status)
@@ -44,7 +47,7 @@ namespace e_commerce_backend.Controllers
         public async Task<IActionResult> UpdateUserAccess(Guid userId)
         {
             var hasAccess = GetRoleAccess();
-            if (hasAccess) return Unauthorized("You are not authorized to access this page.");
+            if (!hasAccess) return Unauthorized("You are not authorized to access this page.");
 
             var response = await _adminService.UpdateUserAccess(userId);
             if (response.Status)
@@ -59,7 +62,7 @@ namespace e_commerce_backend.Controllers
         public async Task<IActionResult> UpdateOrderStatus(Guid orderItemId, Guid status)
         {
             var hasAccess = GetRoleAccess();
-            if (hasAccess) return Unauthorized("You are not authorized to access this page.");
+            if (!hasAccess) return Unauthorized("You are not authorized to access this page.");
 
             var response = await _adminService.UpdateOrderStatus(orderItemId, status);
             if (response.Status)
@@ -74,7 +77,7 @@ namespace e_commerce_backend.Controllers
         public async Task<IActionResult> GetAllOrderStatus()
         {
             var hasAccess = GetRoleAccess();
-            if (hasAccess) return Unauthorized("You are not authorized to access this page.");
+            if (!hasAccess) return Unauthorized("You are not authorized to access this page.");
 
             var response = await _adminService.GetAllOrderStatus();
             if (response != null)
@@ -82,6 +85,24 @@ namespace e_commerce_backend.Controllers
                 return Ok(response);
             }
             return NotFound();
+        }
+
+        [Authorize]
+        [HttpGet("GetOrderDetails")]
+        public async Task<IActionResult> GetOrderDetails()
+        {
+            var hasAccess = GetRoleAccess();
+            if (!hasAccess) return Unauthorized("You are not authorized to access this page.");
+
+            var result = await _orderService.GetOrderDetails(null);
+            if (result.GetType() == typeof(List<StatusMessage>))
+            {
+                return NotFound(result);
+            }
+            else
+            {
+                return Ok(result);
+            }
         }
     }
 }

@@ -8,6 +8,6 @@ namespace e_commerce_backend.Data.Interfaces
         Task<StatusMessage> PlaceOrder(PlaceOrder order);
         Task<IEnumerable<object>> GetOrderDetails(Guid? userId);
 
-        Task<StatusMessage> CancelOrder(Guid orderId);
+        Task<StatusMessage> CancelOrder(Guid userId, Guid orderId, Guid orderItemId);
     }
 }

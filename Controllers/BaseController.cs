@@ -23,8 +23,8 @@ namespace e_commerce_backend.Controllers
         protected Boolean GetRoleAccess()
         {
             var roleIdClaim = User.FindFirst("RoleId")?.Value;
-
-            if(roleIdClaim != null && roleIdClaim == "7F7D8021923B429CB76C22462FD34B55")
+            Console.WriteLine(roleIdClaim);
+            if(roleIdClaim != null && roleIdClaim == "7f7d8021-923b-429c-b76c-22462fd34b55")
                 return true;
 
             return false;

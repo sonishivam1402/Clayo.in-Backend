@@ -145,14 +145,16 @@ namespace e_commerce_backend.Data.Respository
         }
 
 
-        public async Task<StatusMessage> CancelOrder(Guid orderId)
+        public async Task<StatusMessage> CancelOrder(Guid userId, Guid orderId, Guid orderItemId)
         {
             using SqlConnection connection = new SqlConnection(_connectionString);
             using SqlCommand command = new SqlCommand("CancelOrderByOrderId", connection)
             {
                 CommandType = System.Data.CommandType.StoredProcedure
             };
-            command.Parameters.AddWithValue("@orderItemId", orderId);
+            command.Parameters.AddWithValue("@userId", userId);
+            command.Parameters.AddWithValue("@orderId", orderId);
+            command.Parameters.AddWithValue("@orderItemId", orderItemId);
             await connection.OpenAsync();
             using SqlDataReader reader = await command.ExecuteReaderAsync();
             StatusMessage statusMessage = new StatusMessage();

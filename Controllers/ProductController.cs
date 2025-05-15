@@ -41,7 +41,7 @@ namespace e_commerce_backend.Controllers
         public async Task<IActionResult> AddOrUpdate([FromBody] PostProduct product)
         {
             var hasAccess = GetRoleAccess();
-            if (hasAccess) return Unauthorized("You are not authorized to access this page.");
+            if (!hasAccess) return Unauthorized("You are not authorized to access this page.");
 
             if (product == null)
             {
