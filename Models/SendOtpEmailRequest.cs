@@ -3,7 +3,7 @@
     public class SendOtpEmailRequest
     {
         public string Otp { get; set; }
-        public Guid UserId { get; set; }
+
         public string Email { get; set; }
     }
 }

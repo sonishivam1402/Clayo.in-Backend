@@ -11,7 +11,7 @@ namespace e_commerce_backend.Data.Interfaces
 
         //Task<AuthResponse> AuthenticateUser(string email, string password);
 
-        Task<ServiceResponse<SendOtpEmailRequest>> AddOrUpdateUsers(AddOrUpdateUsers request);
+        Task<StatusMessage> AddOrUpdateUsers(AddOrUpdateUsers request);
 
         Task<StatusMessage> VerifyUser(VerifyAndUseOtp reuest);
 

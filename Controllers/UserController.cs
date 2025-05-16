@@ -106,19 +106,7 @@ namespace e_commerce_backend.Controllers
             var result = await _userService.AddOrUpdateUsers(data);
             if (result.Status)
             {
-                var modelObj = new { Otp = result.Data.Otp };
-                string jsonModel = JsonSerializer.Serialize(modelObj);
-
-                var emailRequest = new SendEmailRequest
-                {
-                    ToEmail = result.Data.Email,
-                    TemplateName = "Otp Verification",
-                    ModelJson = jsonModel
-                };
-
-                // Trigger the SendEmail method
-                await _emailRepository.SendEmailAsync<SendOtpEmailRequest>(emailRequest);
-                return Ok(new { Message = result.Message, Id = result.Data.UserId });
+                return Ok(result.Message);
             }
             else
             {

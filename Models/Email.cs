@@ -15,6 +15,11 @@
         //public dynamic Placeholders { get; set; }
 
         public string ModelJson { get; set; }
-    }
+        }
+
+        public class VerifyEmailRequest
+        {
+        public string Email { get; set; }
+        }
 
 }

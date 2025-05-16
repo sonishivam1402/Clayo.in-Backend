@@ -15,7 +15,6 @@
         public string? profile_picture { get; set; }
 
         public bool hasAccess { get; set; }
-        public bool isVerified { get; set; }
 
         public string? address {  get; set; }
         public DateTime? last_updated { get; set; } = default(DateTime?);

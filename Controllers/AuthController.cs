@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using e_commerce_backend.Models;
+using e_commerce_backend.DTO;
+using e_commerce_backend.Services;
+using System.Text.Json;
+using e_commerce_backend.Data.Interfaces;
 
 namespace e_commerce_backend.Controllers
 {
@@ -11,10 +15,38 @@ namespace e_commerce_backend.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IEmailRepository _emailRepository;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IEmailRepository emailRepository)
         {
             _authService = authService;
+            _emailRepository = emailRepository;
+        }
+
+        [HttpPost("VerifyEmail")]
+        public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequest request)
+        {
+            var result = await _authService.VerifyUserEmail(request.Email);
+            if (result.Status)
+            {
+                var modelObj = new { Otp = result.Data.Otp };
+                string jsonModel = JsonSerializer.Serialize(modelObj);
+
+                var emailRequest = new SendEmailRequest
+                {
+                    ToEmail = result.Data.Email,
+                    TemplateName = "Otp Verification",
+                    ModelJson = jsonModel
+                };
+
+                // Trigger the SendEmail method
+                await _emailRepository.SendEmailAsync<SendOtpEmailRequest>(emailRequest);
+                return Ok(new { Message = result.Message});
+            }
+            else
+            {
+                return BadRequest(result.Message);
+            }
         }
 
         [HttpPost("login")]

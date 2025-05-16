@@ -1,4 +1,7 @@
-﻿using e_commerce_backend.Data.Interfaces;
+﻿using Azure.Core;
+using e_commerce_backend.Data.Interfaces;
+using e_commerce_backend.Data.Respository;
+using e_commerce_backend.DTO;
 using e_commerce_backend.Models;
 using e_commerce_backend.Services.Interfaces;
 using Microsoft.Extensions.Options;
@@ -163,6 +166,11 @@ namespace e_commerce_backend.Services
             {
                 return null;
             }
+        }
+
+        public async Task<ServiceResponse<SendOtpEmailRequest>> VerifyUserEmail(string email)
+        {
+            return await _authRepo.VerfiyUserEmail(email);
         }
     }
 }

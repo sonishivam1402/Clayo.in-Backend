@@ -1,4 +1,6 @@
-﻿using e_commerce_backend.Data.Interfaces;
+﻿using Azure.Core;
+using e_commerce_backend.Data.Interfaces;
+using e_commerce_backend.DTO;
 using e_commerce_backend.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -136,6 +138,39 @@ namespace e_commerce_backend.Data.Respository
                     await command.ExecuteNonQueryAsync();
                 }
             }
+        }
+
+        public async Task<ServiceResponse<SendOtpEmailRequest>> VerfiyUserEmail(string email)
+        {
+            ServiceResponse<SendOtpEmailRequest> serviceResponse = new ServiceResponse<SendOtpEmailRequest>();
+            SendOtpEmailRequest otpVerification = new SendOtpEmailRequest();
+            using SqlConnection conn = new(_config.GetConnectionString("DefaultConnection"));
+            using SqlCommand cmd = new("OtpCreation", conn)
+            {
+                CommandType = CommandType.StoredProcedure
+            };
+            cmd.Parameters.AddWithValue("@email", email);
+
+            await conn.OpenAsync();
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            if (reader.Read())
+            {
+                serviceResponse.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
+                serviceResponse.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
+                otpVerification.Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString(reader.GetOrdinal("Email"));
+                otpVerification.Otp = reader.IsDBNull(reader.GetOrdinal("OTP")) ? null : reader.GetString(reader.GetOrdinal("OTP"));
+                serviceResponse.Data = otpVerification;
+            }
+            else
+            {
+                serviceResponse.Status = false;
+                serviceResponse.Message = "No data returned from stored procedure.";
+                serviceResponse.Data = null;
+            }
+
+            return serviceResponse;
         }
     }
 }

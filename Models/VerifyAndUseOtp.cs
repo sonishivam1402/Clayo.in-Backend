@@ -3,6 +3,6 @@
     public class VerifyAndUseOtp
     {
         public string otp { get; set; }
-        public Guid userId { get; set; }
+        public string email { get; set; }
     }
 }

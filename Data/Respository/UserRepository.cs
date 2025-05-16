@@ -121,10 +121,9 @@ namespace e_commerce_backend.Data.Respository
 
         //}
 
-        public async Task<ServiceResponse<SendOtpEmailRequest>> AddOrUpdateUsers(AddOrUpdateUsers request)
+        public async Task<StatusMessage> AddOrUpdateUsers(AddOrUpdateUsers request)
         {
-            ServiceResponse<SendOtpEmailRequest> serviceResponse = new ServiceResponse<SendOtpEmailRequest>();
-            SendOtpEmailRequest otpVerification = new SendOtpEmailRequest();
+            StatusMessage sm = new StatusMessage();
             using SqlConnection conn = new(_connectionString);
             using SqlCommand cmd = new("AddOrUpdateUser", conn)
             {
@@ -144,21 +143,16 @@ namespace e_commerce_backend.Data.Respository
 
             if (reader.Read())
             {
-                serviceResponse.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
-                serviceResponse.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
-                otpVerification.UserId = reader.IsDBNull(reader.GetOrdinal("UserId")) ? Guid.Empty : reader.GetGuid(reader.GetOrdinal("UserId"));
-                otpVerification.Email = reader.IsDBNull(reader.GetOrdinal("Email")) ? null : reader.GetString(reader.GetOrdinal("Email"));
-                otpVerification.Otp = reader.IsDBNull(reader.GetOrdinal("OTP")) ? null : reader.GetString(reader.GetOrdinal("OTP"));
-                serviceResponse.Data = otpVerification;
+                sm.Message = reader.IsDBNull(reader.GetOrdinal("Message")) ? null : reader.GetString(reader.GetOrdinal("Message"));
+                sm.Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? false : reader.GetBoolean(reader.GetOrdinal("Status"));
             }
             else
             {
-                serviceResponse.Status = false;
-                serviceResponse.Message = "No data returned from stored procedure.";
-                serviceResponse.Data = null;
+                sm.Status = false;
+                sm.Message = "No data returned from stored procedure.";
             }
 
-            return serviceResponse;
+            return sm;
         }
 
         public async Task<StatusMessage> VerifyUser(VerifyAndUseOtp request)
@@ -169,7 +163,7 @@ namespace e_commerce_backend.Data.Respository
             {
                 CommandType = CommandType.StoredProcedure
             };
-            cmd.Parameters.AddWithValue("@UserId", request.userId);
+            cmd.Parameters.AddWithValue("@Email", request.email);
             cmd.Parameters.AddWithValue("@InputOTP", request.otp);
             await conn.OpenAsync();
             using SqlDataReader reader = await cmd.ExecuteReaderAsync();
@@ -199,7 +193,6 @@ namespace e_commerce_backend.Data.Respository
                 Role = reader.GetString(reader.GetOrdinal("Role_name")),
                 address = reader.IsDBNull(reader.GetOrdinal("address")) ? null : reader.GetString(reader.GetOrdinal("address")),
                 hasAccess = reader.GetBoolean(reader.GetOrdinal("hasAccess")),
-                isVerified = reader.GetBoolean(reader.GetOrdinal("is_verified")),
                 profile_picture = reader.IsDBNull(reader.GetOrdinal("profile_picture")) ? null : reader.GetString(reader.GetOrdinal("profile_picture")),
                 last_updated = reader.IsDBNull(reader.GetOrdinal("updated_at")) ? null : reader.GetDateTime(reader.GetOrdinal("updated_at"))
             };
