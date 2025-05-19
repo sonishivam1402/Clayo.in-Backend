@@ -34,5 +34,5 @@ jobs:
           context: .
           push: true
           tags: |
-            sonishivam1402/clayo-frontend:latest
-            sonishivam1402/clayo-frontend:${{ env.IMAGE_TAG }}
+            sonishivam1402/clayo-backend:latest
+            sonishivam1402/clayo-backend:${{ env.IMAGE_TAG }}
