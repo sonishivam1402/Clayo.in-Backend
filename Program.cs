@@ -10,7 +10,7 @@ using e_commerce_backend.Data.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//builder.WebHost.UseUrls("http://0.0.0.0:5000");  // docker
+builder.WebHost.UseUrls("http://0.0.0.0:5000");  // docker
 
 // Add services to the container.
 
@@ -78,7 +78,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         builder => builder
-            .WithOrigins("http://localhost:5173") // React dev server //docker -3000
+            .WithOrigins("http://localhost:3000") // React dev server -5173 //docker -3000
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
